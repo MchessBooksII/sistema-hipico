@@ -26,7 +26,7 @@
         .group-inputs { display: flex; gap: 10px; flex: 1; }
 
         input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 13px; outline: none; transition: border-color 0.2s; width: 100%; }
-        input:focus, select:focus { border-color: var(--accent); }
+        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
 
         button { padding: 10px 16px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 13px; }
         .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
@@ -40,12 +40,14 @@
         td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); transition: background-color 0.2s; height: 40px; }
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
+        /* Sticky Columns */
         th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); }
         th:nth-child(2), td:nth-child(2) { position: sticky; left: 100px; z-index: 5; background-color: var(--panel-bg); }
         th:nth-child(3), td:nth-child(3) { position: sticky; left: 150px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
         tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3) { background-color: #26334d; }
 
-        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; }
+        /* Inputs de la tabla */
+        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 14px;}
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
         td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; box-shadow: inset 0 0 0 1px var(--accent); z-index: 6; position: relative;}
 
@@ -60,14 +62,17 @@
         .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 12px; }
         .text-destacado { font-weight: 700; color: white; padding: 5px;}
         .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
-
+        
+        /* Animación para la nueva fila */
+        @keyframes highlight { from { background-color: rgba(59, 130, 246, 0.4); } to { background-color: transparent; } }
+        .new-row { animation: highlight 1s ease-out; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v2.1 - Dashboard Analítico</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v2.2 - Dashboard Analítico</div>
     </header>
 
     <div class="panel">
@@ -133,54 +138,62 @@
             return parseFloat(valor);
         }
 
-        function guardar() {
+        // Guarda los datos sin destruir la tabla
+        function guardarSilencioso() {
             localStorage.setItem('caballosHipicosElite', JSON.stringify(caballos));
-            renderTabla();
-            actualizarFiltro();
         }
 
-        // Se añade focusAuto para saber si debemos poner el cursor en la nueva fila
+        function actualizarDato(id, campo, valor) {
+            const caballo = caballos.find(c => c.id === id);
+            if(caballo) { 
+                caballo[campo] = valor; 
+                guardarSilencioso(); 
+                // NOTA: Ya NO llamamos a renderTabla() aquí para no romper el TAB
+            }
+        }
+
         function agregarCaballo(focusAuto = false) {
+            // Leemos los inputs globales
             const hipodromo = document.getElementById('hipodromo').value.trim();
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
             
-            // Si es la primera vez y no hay inputs, pedimos los datos generales
             if(!hipodromo || !carrera || !distancia) {
                 if (caballos.length === 0) {
-                    alert("Llena Hipódromo, Carrera y Distancia para comenzar.");
+                    alert("Por favor llena Hipódromo, Carrera y Distancia primero.");
                     return;
                 }
             }
 
+            // Si ya hay datos, usamos los del último caballo como predeterminados
+            const hFinal = hipodromo || caballos[caballos.length-1].hipodromo;
+            const cFinal = parseInt(carrera) || caballos[caballos.length-1].carrera;
+            const dFinal = parseInt(distancia) || caballos[caballos.length-1].distanciaHoy;
+
             caballos.push({
-                id: Date.now(), 
-                hipodromo: hipodromo || (caballos.length > 0 ? caballos[caballos.length-1].hipodromo : ''), 
-                carrera: parseInt(carrera) || (caballos.length > 0 ? caballos[caballos.length-1].carrera : 1), 
-                distanciaHoy: parseInt(distancia) || (caballos.length > 0 ? caballos[caballos.length-1].distanciaHoy : 1200),
+                id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
                 nro: '', t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
-            guardar();
+            
+            guardarSilencioso();
+            renderTabla(true); // Re-renderizamos y le pasamos "true" para animar la fila nueva
 
             if (focusAuto) {
-                // Poner el cursor en el primer campo de la última fila
                 setTimeout(() => {
                     const rows = document.querySelectorAll('#cuerpoTabla tr');
                     if (rows.length > 0) {
                         const lastRow = rows[rows.length - 1];
                         const firstInput = lastRow.querySelector('input');
-                        if (firstInput) firstInput.focus();
+                        if (firstInput) {
+                            firstInput.focus();
+                            firstInput.select(); // Selecciona el texto por si acaso
+                        }
                     }
                 }, 50);
             }
-        }
-
-        function actualizarDato(id, campo, valor) {
-            const caballo = caballos.find(c => c.id === id);
-            if(caballo) { caballo[campo] = valor; guardar(); }
         }
 
         function actualizarFiltro() {
@@ -193,73 +206,78 @@
             if (hipodromos.includes(valorActual) || valorActual === "TODOS") select.value = valorActual;
         }
 
-        // MAGIA: Navegación tipo Excel
+        // MAGIA PARA EL TAB Y ENTER
         function handleKeyDown(e) {
-            // Si presionan ENTER
-            if (e.key === 'Enter') {
+            const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
+            const isLastInput = (e.target === inputs[inputs.length - 1]);
+
+            if (e.key === 'Tab' && !e.shiftKey) {
+                if (isLastInput) {
+                    e.preventDefault(); 
+                    agregarCaballo(true); // Crea nueva fila y enfoca
+                }
+            } 
+            else if (e.key === 'Enter') {
                 e.preventDefault();
-                const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
-                const index = inputs.indexOf(e.target);
-                
-                if (index === inputs.length - 1) {
-                    // Es el último input de la tabla. Agregamos fila y enfocamos.
+                if (isLastInput) {
                     agregarCaballo(true);
                 } else {
-                    // Bajar a la misma columna de la siguiente fila
                     const tr = e.target.closest('tr');
                     const nextTr = tr.nextElementSibling;
                     if (nextTr) {
                         const cellIndex = e.target.closest('td').cellIndex;
-                        const nextTd = nextTr.cells[cellIndex];
-                        const nextInput = nextTd.querySelector('input, select');
+                        const nextInput = nextTr.cells[cellIndex].querySelector('input, select');
                         if (nextInput) nextInput.focus();
+                    } else {
+                        agregarCaballo(true);
                     }
-                }
-            } 
-            // Si presionan TAB en el ÚLTIMO input de la ÚLTIMA fila
-            else if (e.key === 'Tab' && !e.shiftKey) {
-                const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
-                const index = inputs.indexOf(e.target);
-                
-                if (index === inputs.length - 1) {
-                    e.preventDefault(); // Evitar que el cursor vuele al principio de la página
-                    agregarCaballo(true); // Agrega fila y mueve el cursor al Nro de la nueva fila
                 }
             }
         }
 
-        function renderTabla() {
+        function renderTabla(animarUltimaFila = false) {
             const tbody = document.getElementById('cuerpoTabla');
             const filtro = document.getElementById('filtroHipodromo').value;
+            
+            // Guardamos el foco actual para no perderlo si estamos escribiendo
+            const activeElement = document.activeElement;
+            const activeId = activeElement ? activeElement.getAttribute('data-id') : null;
+            const activeField = activeElement ? activeElement.getAttribute('data-field') : null;
+
             tbody.innerHTML = '';
+            actualizarFiltro();
             
             const caballosFiltrados = filtro === "TODOS" ? caballos : caballos.filter(c => c.hipodromo === filtro);
+            const lastId = caballos.length > 0 ? caballos[caballos.length-1].id : null;
 
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
+                if (animarUltimaFila && c.id === lastId) {
+                    tr.classList.add('new-row');
+                }
                 tr.innerHTML = `
                     <td><span style="font-weight: 600; color: #94a3b8;">${c.hipodromo}</span></td>
                     <td>${c.carrera}</td>
-                    <td><input type="number" class="input-nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><select onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)">
+                    <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)">
                         <option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option>
                         <option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option>
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
-                    <td><input type="number" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
-                    <td><input type="number" step="0.1" value="${c.ml}" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
+                    <td><input type="number" step="0.1" data-id="${c.id}" data-field="ml" value="${c.ml}" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
                     
                     <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
@@ -276,6 +294,14 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            // Restauramos el foco si habíamos perdido uno
+            if (activeId && activeField) {
+                const inputToFocus = document.querySelector(`input[data-id="${activeId}"][data-field="${activeField}"], select[data-id="${activeId}"][data-field="${activeField}"]`);
+                if (inputToFocus) {
+                    inputToFocus.focus();
+                }
+            }
         }
 
         function calcularTodo() {
@@ -330,7 +356,10 @@
             caballos.forEach(c => {
                 if(c.tpAjustado === "Sin Datos") { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
             });
-            guardar();
+            
+            guardarSilencioso();
+            renderTabla(); // Solo re-renderizamos al calcular
+            alert("¡Cálculos ejecutados con éxito! Revisa el Ranking y Alertas.");
         }
 
         function exportarDatos() {
@@ -346,14 +375,14 @@
             reader.onload = function(e) {
                 try {
                     const contenido = JSON.parse(e.target.result);
-                    if(Array.isArray(contenido)) { caballos = contenido; guardar(); alert("¡Datos cargados exitosamente!"); }
+                    if(Array.isArray(contenido)) { caballos = contenido; guardarSilencioso(); renderTabla(); alert("¡Datos cargados exitosamente!"); }
                 } catch (error) { alert("Error al leer el archivo."); }
             };
             reader.readAsText(event.target.files[0]);
         }
 
         function limpiarTodo() {
-            if(confirm("¿Borrar todos los datos actuales? Asegúrate de tener un respaldo.")) { caballos = []; guardar(); }
+            if(confirm("¿Borrar todos los datos actuales? Asegúrate de tener un respaldo.")) { caballos = []; guardarSilencioso(); renderTabla(); }
         }
 
         function exportarCSV() {
@@ -367,6 +396,7 @@
             document.body.appendChild(link); link.click(); link.remove();
         }
 
+        // Inicializar la tabla al cargar
         actualizarFiltro();
         renderTabla();
     </script>
