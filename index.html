@@ -3,78 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO - Élite</title>
+    <title>Sistema Hípico PRO | Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; padding: 15px; }
-        h1 { color: #00e676; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        :root {
+            --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --border: #334155; --valor: #c084fc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-size: 14px;
+        }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .group-inputs { display: flex; gap: 10px; flex: 1; }
+
+        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 13px; outline: none; transition: border-color 0.2s; width: 100%; }
+        input:focus, select:focus { border-color: var(--accent); }
+
+        button { padding: 10px 16px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 13px; }
+        .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
+
+        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 70vh; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; white-space: nowrap; }
+        th { background-color: #1e293b; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); transition: background-color 0.2s; height: 40px; }
+        tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
+
+        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(2), td:nth-child(2) { position: sticky; left: 100px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(3), td:nth-child(3) { position: sticky; left: 150px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
+        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3) { background-color: #26334d; }
+
+        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; }
+        td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
+        td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; box-shadow: inset 0 0 0 1px var(--accent); z-index: 6; position: relative;}
+
+        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 16px; }
+        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 15px; }
+        .val-rankin-3 { color: #f97316; font-weight: bold; }
         
-        /* Controles */
-        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; justify-content: center; align-items: center; background: #1e1e1e; padding: 15px; border-radius: 10px; border: 1px solid #333; }
-        input, select { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #2a2a2a; color: white; font-size: 14px; }
-        button { padding: 9px 15px; background: #00e676; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        button:hover { background: #00c853; transform: scale(1.05); }
-        .btn-blue { background: #29b6f6; color: #000; }
-        .btn-blue:hover { background: #039be5; }
-        .btn-red { background: #ef5350; color: #fff; }
-        .btn-red:hover { background: #d32f2f; }
-        .btn-orange { background: #ffa726; color: #000; }
-        .btn-orange:hover { background: #fb8c00; }
-        
-        /* Tabla */
-        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #333; }
-        table { width: 100%; border-collapse: collapse; background: #1e1e1e; font-size: 13px; }
-        th, td { padding: 8px; text-align: center; border-bottom: 1px solid #333; }
-        th { background: #2c2c2c; color: #00e676; position: sticky; top: 0; font-weight: 600; }
-        td input { width: 100%; box-sizing: border-box; text-align: center; background: #2a2a2a; border: 1px solid #444; }
-        
-        /* Colores de Ranking */
-        .rankin-1 { background-color: rgba(0, 230, 118, 0.2); font-weight: bold; color: #00e676; font-size: 15px;}
-        .rankin-2 { background-color: rgba(255, 167, 38, 0.2); font-weight: bold; color: #ffa726; }
-        .rankin-3 { background-color: rgba(255, 112, 67, 0.2); font-weight: bold; color: #ff7043; }
-        
-        /* Alertas */
-        .valor { color: #d500f9; font-weight: bold; text-shadow: 0 0 5px #d500f9; }
-        .trampa { color: #ef5350; font-weight: bold; }
-        .sin-datos { color: #757575; font-style: italic; }
+        .val-alerta { display: inline-block; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; margin: 5px; }
+        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
+        .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 12px; }
+        .text-destacado { font-weight: 700; color: white; padding: 5px;}
+        .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
+
     </style>
 </head>
 <body>
 
-    <h1>🏇 Sistema Hípico PRO - Élite</h1>
+    <header>
+        <h1>🏇 SISTEMA HÍPICO PRO</h1>
+        <div style="color: var(--text-muted); font-size: 12px;">v2.1 - Dashboard Analítico</div>
+    </header>
 
-    <div class="controls">
-        <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo" style="width: 140px;">
-        <datalist id="hipodromos">
-            <option value="La Rinconada"><option value="Keeneland"><option value="Charles Town"><option value="Gulfstream"><option value="Santa Anita">
-        </datalist>
-
-        <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px;">
-        <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
-        <button onclick="agregarCaballo()">➕ Agregar Caballo</button>
-        <button onclick="calcularTodo()" class="btn-blue">🧮 Calcular Todo</button>
+    <div class="panel">
+        <div class="group-inputs">
+            <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo" style="width: 150px;">
+            <datalist id="hipodromos">
+                <option value="La Rinconada"><option value="Keeneland"><option value="Charles Town"><option value="Gulfstream"><option value="Santa Anita">
+            </datalist>
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 110px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 130px;">
+            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir Ejemplar</button>
+        </div>
         
-        <select id="filtroHipodromo" onchange="renderTabla()" style="margin-left: 10px;">
-            <option value="TODOS">Ver Todos</option>
+        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 180px; background: #0f172a;">
+            <option value="TODOS">🌐 Ver Todos los Hipódromos</option>
         </select>
-
-        <button onclick="exportarDatos()" class="btn-orange">💾 Respaldar</button>
-        <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
-        <button onclick="document.getElementById('importarArchivo').click()" class="btn-orange">📂 Cargar</button>
-        <button onclick="exportarCSV()" class="btn-blue">📊 Exportar a Excel</button>
-        <button onclick="limpiarTodo()" class="btn-red">🗑️ Limpiar</button>
     </div>
 
-    <div class="table-container">
-        <table id="tablaCaballos">
+    <div class="panel" style="justify-content: space-between;">
+        <div style="display: flex; gap: 10px;">
+            <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos</button>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="exportarCSV()" class="btn-outline">📊 Exportar a Excel</button>
+            <button onclick="exportarDatos()" class="btn-outline">💾 Respaldo</button>
+            <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
+            <button onclick="document.getElementById('importarArchivo').click()" class="btn-outline">📂 Restaurar</button>
+            <button onclick="limpiarTodo()" class="btn-danger">🗑️</button>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
             <thead>
                 <tr>
-                    <th>Hipódromo</th><th>Carr.</th><th>Nro</th>
+                    <th style="width: 100px;">Hipódromo</th>
+                    <th style="width: 50px;">Carr.</th>
+                    <th style="width: 50px;">Nro</th>
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Puesto</th><th>Kilos</th>
-                    <th>Style</th><th>Quirin</th><th>Morning Line</th>
-                    <th>TP Real</th><th>Ajuste</th><th>TP Ajust.</th>
-                    <th>Ranking</th><th>Dif</th><th>Est</th><th>Alerta</th>
+                    <th>Style</th><th>Quir.</th><th>M. Line</th>
+                    <th style="color: #60a5fa;">TP Real</th><th>Ajuste</th>
+                    <th style="color: #c084fc;">TP Ajust.</th>
+                    <th>Ranking</th><th>Dif</th><th>Est</th>
+                    <th style="color: var(--success);">Alerta</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla"></tbody>
@@ -84,7 +123,6 @@
     <script>
         let caballos = JSON.parse(localStorage.getItem('caballosHipicosElite')) || [];
 
-        // Convertir formato 1:10.4 a 70.4 segundos
         function parseTiempo(valor) {
             if (!valor) return NaN;
             valor = valor.toString().trim();
@@ -101,21 +139,43 @@
             actualizarFiltro();
         }
 
-        function agregarCaballo() {
+        // Se añade focusAuto para saber si debemos poner el cursor en la nueva fila
+        function agregarCaballo(focusAuto = false) {
             const hipodromo = document.getElementById('hipodromo').value.trim();
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
             
-            if(!hipodromo || !carrera || !distancia) { alert("Llena Hipódromo, Carrera y Distancia."); return; }
+            // Si es la primera vez y no hay inputs, pedimos los datos generales
+            if(!hipodromo || !carrera || !distancia) {
+                if (caballos.length === 0) {
+                    alert("Llena Hipódromo, Carrera y Distancia para comenzar.");
+                    return;
+                }
+            }
 
             caballos.push({
-                id: Date.now(), hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
+                id: Date.now(), 
+                hipodromo: hipodromo || (caballos.length > 0 ? caballos[caballos.length-1].hipodromo : ''), 
+                carrera: parseInt(carrera) || (caballos.length > 0 ? caballos[caballos.length-1].carrera : 1), 
+                distanciaHoy: parseInt(distancia) || (caballos.length > 0 ? caballos[caballos.length-1].distanciaHoy : 1200),
                 nro: '', t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
             guardar();
+
+            if (focusAuto) {
+                // Poner el cursor en el primer campo de la última fila
+                setTimeout(() => {
+                    const rows = document.querySelectorAll('#cuerpoTabla tr');
+                    if (rows.length > 0) {
+                        const lastRow = rows[rows.length - 1];
+                        const firstInput = lastRow.querySelector('input');
+                        if (firstInput) firstInput.focus();
+                    }
+                }, 50);
+            }
         }
 
         function actualizarDato(id, campo, valor) {
@@ -128,9 +188,44 @@
             const valorActual = select.value;
             const hipodromos = [...new Set(caballos.map(c => c.hipodromo))];
             
-            select.innerHTML = '<option value="TODOS">Ver Todos</option>';
+            select.innerHTML = '<option value="TODOS">🌐 Ver Todos los Hipódromos</option>';
             hipodromos.forEach(h => select.innerHTML += `<option value="${h}">${h}</option>`);
             if (hipodromos.includes(valorActual) || valorActual === "TODOS") select.value = valorActual;
+        }
+
+        // MAGIA: Navegación tipo Excel
+        function handleKeyDown(e) {
+            // Si presionan ENTER
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
+                const index = inputs.indexOf(e.target);
+                
+                if (index === inputs.length - 1) {
+                    // Es el último input de la tabla. Agregamos fila y enfocamos.
+                    agregarCaballo(true);
+                } else {
+                    // Bajar a la misma columna de la siguiente fila
+                    const tr = e.target.closest('tr');
+                    const nextTr = tr.nextElementSibling;
+                    if (nextTr) {
+                        const cellIndex = e.target.closest('td').cellIndex;
+                        const nextTd = nextTr.cells[cellIndex];
+                        const nextInput = nextTd.querySelector('input, select');
+                        if (nextInput) nextInput.focus();
+                    }
+                }
+            } 
+            // Si presionan TAB en el ÚLTIMO input de la ÚLTIMA fila
+            else if (e.key === 'Tab' && !e.shiftKey) {
+                const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
+                const index = inputs.indexOf(e.target);
+                
+                if (index === inputs.length - 1) {
+                    e.preventDefault(); // Evitar que el cursor vuele al principio de la página
+                    agregarCaballo(true); // Agrega fila y mueve el cursor al Nro de la nueva fila
+                }
+            }
         }
 
         function renderTabla() {
@@ -143,35 +238,41 @@
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><b>${c.hipodromo}</b></td>
+                    <td><span style="font-weight: 600; color: #94a3b8;">${c.hipodromo}</span></td>
                     <td>${c.carrera}</td>
-                    <td><input type="number" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)"></td>
-                    <td><input type="text" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)"></td>
-                    <td><input type="text" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)"></td>
-                    <td><input type="text" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)"></td>
-                    <td><input type="text" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)"></td>
-                    <td><input type="text" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)"></td>
-                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)"></td>
-                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)"></td>
-                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)"></td>
-                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)"></td>
-                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)"></td>
-                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)"></td>
-                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)"></td>
-                    <td><select onchange="actualizarDato(${c.id}, 'style', this.value)">
+                    <td><input type="number" class="input-nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><select onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)">
                         <option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option>
                         <option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option>
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
-                    <td><input type="number" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" min="0" max="8"></td>
-                    <td><input type="number" step="0.1" value="${c.ml}" onchange="actualizarDato(${c.id}, 'ml', this.value)"></td>
-                    <td>${c.tpReal}</td>
-                    <td>${c.ajuste}</td>
-                    <td><b>${c.tpAjustado}</b></td>
-                    <td class="${c.ranking === 1 ? 'rankin-1' : c.ranking === 2 ? 'rankin-2' : c.ranking === 3 ? 'rankin-3' : ''}">${c.ranking}</td>
+                    <td><input type="number" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
+                    <td><input type="number" step="0.1" value="${c.ml}" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    
+                    <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
+                    <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
+                    <td class="${c.tpAjustado === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}" style="color: #c084fc;">${c.tpAjustado}</td>
+                    
+                    <td class="${c.ranking === 1 ? 'val-rankin-1' : c.ranking === 2 ? 'val-rankin-2' : c.ranking === 3 ? 'val-rankin-3' : ''}">${c.ranking}</td>
                     <td>${c.dif}</td>
-                    <td>${c.est}</td>
-                    <td class="${c.alerta === 'VALOR' ? 'valor' : c.alerta === 'TRAMPA' ? 'trampa' : ''}">${c.alerta}</td>
+                    <td style="font-weight: 600;">${c.est}</td>
+                    
+                    <td>
+                        ${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">🔥 VALOR</span>' : 
+                          c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>' : ''}
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -191,7 +292,6 @@
 
                 c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "Sin Datos";
 
-                // Ajuste
                 let ajuste = 0;
                 const kilos = parseFloat(c.kilos);
                 const puesto = parseFloat(c.puesto);
@@ -219,7 +319,6 @@
                     c.dif = (parseFloat(c.tpAjustado) - mejorTiempo).toFixed(2);
                     c.est = c.dif <= 0.3 ? "***" : c.dif <= 0.8 ? "**" : "*";
                     
-                    // Lógica de VALOR y TRAMPA
                     const ml = parseFloat(c.ml);
                     if (!isNaN(ml)) {
                         if (c.ranking === 1 && ml >= 4.0) c.alerta = "VALOR";
@@ -234,7 +333,6 @@
             guardar();
         }
 
-        // RESPALDO
         function exportarDatos() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(caballos));
             const a = document.createElement('a');
@@ -248,28 +346,24 @@
             reader.onload = function(e) {
                 try {
                     const contenido = JSON.parse(e.target.result);
-                    if(Array.isArray(contenido)) { caballos = contenido; guardar(); alert("¡Datos cargados!"); }
+                    if(Array.isArray(contenido)) { caballos = contenido; guardar(); alert("¡Datos cargados exitosamente!"); }
                 } catch (error) { alert("Error al leer el archivo."); }
             };
             reader.readAsText(event.target.files[0]);
         }
 
         function limpiarTodo() {
-            if(confirm("¿Borrar todos los datos actuales?")) { caballos = []; guardar(); }
+            if(confirm("¿Borrar todos los datos actuales? Asegúrate de tener un respaldo.")) { caballos = []; guardar(); }
         }
 
-        // EXPORTAR A CSV (Para abrir en Excel)
         function exportarCSV() {
             if(caballos.length === 0) return alert("No hay datos para exportar.");
-            
             const cabeceras = ["Hipodromo", "Carrera", "Nro", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine"];
             const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml].join(","));
-            
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "resultados_hipicos.csv");
+            link.setAttribute("href", encodedUri); link.setAttribute("download", "resultados_hipicos.csv");
             document.body.appendChild(link); link.click(); link.remove();
         }
 
