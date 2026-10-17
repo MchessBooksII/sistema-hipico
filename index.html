@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Hípico PRO</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e24; color: #fff; padding: 20px; }
+        h1 { color: #4caf50; text-align: center; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        input, select { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #2a2a35; color: white; }
+        button { padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #45a049; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2a2a35; }
+        th, td { padding: 10px; text-align: center; border-bottom: 1px solid #444; }
+        th { background: #333; color: #4caf50; }
+        .rankin-1 { background-color: #2e7d32; font-weight: bold; }
+        .rankin-2 { background-color: #f9a825; color: #000; }
+        .rankin-3 { background-color: #ef6c00; }
+        .desc { color: #888; }
+    </style>
+</head>
+<body>
+
+    <h1>🏇 Sistema Hípico PRO</h1>
+
+    <div class="controls">
+        <input type="number" id="carrera" placeholder="N° Carrera" style="width: 100px;">
+        <input type="number" id="distancia" placeholder="Distancia (Ej: 1200)" style="width: 150px;">
+        <button onclick="agregarCaballo()">➕ Agregar Caballo</button>
+        <button onclick="calcularTodo()" style="background: #2196F3;">🧮 Calcular TP y Ranking</button>
+        <button onclick="limpiarTodo()" style="background: #f44336;">🗑️ Limpiar Todo</button>
+    </div>
+
+    <table id="tablaCaballos">
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>T1</th>
+                <th>T2</th>
+                <th>T3</th>
+                <th>T4</th>
+                <th>T5</th>
+                <th>D1</th>
+                <th>D2</th>
+                <th>D3</th>
+                <th>D4</th>
+                <th>D5</th>
+                <th>Puesto</th>
+                <th>Kilos</th>
+                <th>TP Real</th>
+                <th>Ajuste</th>
+                <th>TP Ajustado</th>
+                <th>Ranking</th>
+                <th>Dif</th>
+                <th>Est</th>
+            </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+            <!-- Aquí se agregarán los caballos -->
+        </tbody>
+    </table>
+
+    <script>
+        // Lógica de la aplicación
+        let caballos = JSON.parse(localStorage.getItem('caballosHipicos')) || [];
+
+        function guardar() {
+            localStorage.setItem('caballosHipicos', JSON.stringify(caballos));
+            renderTabla();
+        }
+
+        function agregarCaballo() {
+            const carrera = document.getElementById('carrera').value;
+            const distancia = document.getElementById('distancia').value;
+            
+            if(!carrera || !distancia) {
+                alert("Por favor, ingresa el número de carrera y la distancia primero.");
+                return;
+            }
+
+            const nuevoCaballo = {
+                id: Date.now(),
+                carrera: parseInt(carrera),
+                distanciaHoy: parseInt(distancia),
+                nro: '', t1: '', t2: '', t3: '', t4: '', t5: '',
+                d1: '', d2: '', d3: '', d4: '', d5: '',
+                puesto: '', kilos: '',
+                tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: ''
+            };
+            caballos.push(nuevoCaballo);
+            guardar();
+        }
+
+        function actualizarDato(id, campo, valor) {
+            const caballo = caballos.find(c => c.id === id);
+            if(caballo) {
+                caballo[campo] = valor;
+                guardar();
+            }
+        }
+
+        function renderTabla() {
+            const tbody = document.getElementById('cuerpoTabla');
+            tbody.innerHTML = '';
+            
+            caballos.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="number" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" style="width: 50px;"></td>
+                    <td><input type="number" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" style="width: 60px;"></td>
+                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" style="width: 60px;"></td>
+                    <td id="tp-${c.id}">${c.tpReal}</td>
+                    <td id="aj-${c.id}">${c.ajuste}</td>
+                    <td id="tpa-${c.id}">${c.tpAjustado}</td>
+                    <td id="rank-${c.id}" class="${c.ranking === 1 ? 'rankin-1' : c.ranking === 2 ? 'rankin-2' : c.ranking === 3 ? 'rankin-3' : ''}">${c.ranking}</td>
+                    <td id="dif-${c.id}">${c.dif}</td>
+                    <td id="est-${c.id}">${c.est}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcularTodo() {
+            if(caballos.length === 0) return;
+
+            // 1. Calcular TP Real y Ajuste
+            caballos.forEach(c => {
+                const tiempos = [parseFloat(c.t1), parseFloat(c.t2), parseFloat(c.t3), parseFloat(c.t4), parseFloat(c.t5)];
+                const distancias = [parseFloat(c.d1), parseFloat(c.d2), parseFloat(c.d3), parseFloat(c.d4), parseFloat(c.d5)];
+                const distHoy = c.distanciaHoy;
+
+                let tiemposValidos = [];
+                for(let i=0; i<5; i++) {
+                    if(distancias[i] === distHoy && !isNaN(tiempos[i])) {
+                        tiemposValidos.push(tiempos[i]);
+                    }
+                }
+
+                if(tiemposValidos.length > 0) {
+                    let suma = tiemposValidos.reduce((a,b) => a+b, 0);
+                    c.tpReal = (suma / tiemposValidos.length).toFixed(2);
+                } else {
+                    c.tpReal = "Sin Datos";
+                }
+
+                // Ajuste por Kilos y Puesto
+                let ajuste = 0;
+                const kilos = parseFloat(c.kilos);
+                const puesto = parseFloat(c.puesto);
+
+                if(!isNaN(kilos) && kilos > 0) {
+                    ajuste += (kilos - 54) * 0.2;
+                }
+                if(!isNaN(puesto) && puesto > 0) {
+                    if(puesto <= 3) ajuste -= 0.2;
+                    else if(puesto >= 8) ajuste += 0.3;
+                }
+                c.ajuste = ajuste.toFixed(2);
+
+                // TP Ajustado
+                if(c.tpReal !== "Sin Datos") {
+                    c.tpAjustado = (parseFloat(c.tpReal) + ajuste).toFixed(2);
+                } else {
+                    c.tpAjustado = "Sin Datos";
+                }
+            });
+
+            // 2. Calcular Ranking y Diferencia por Carrera
+            const carreras = [...new Set(caballos.map(c => c.carrera))];
+            
+            carreras.forEach(carreraNum => {
+                let caballosCarrera = caballos.filter(c => c.carrera === carreraNum && c.tpAjustado !== "Sin Datos");
+                
+                if(caballosCarrera.length === 0) return;
+
+                // Ordenar por TP Ajustado (menor es mejor)
+                caballosCarrera.sort((a,b) => parseFloat(a.tpAjustado) - parseFloat(b.tpAjustado));
+                
+                const mejorTiempo = parseFloat(caballosCarrera[0].tpAjustado);
+
+                caballosCarrera.forEach((c, index) => {
+                    c.ranking = index + 1;
+                    c.dif = (parseFloat(c.tpAjustado) - mejorTiempo).toFixed(2);
+                    
+                    if(c.dif <= 0.3) c.est = "***";
+                    else if(c.dif <= 0.8) c.est = "**";
+                    else c.est = "*";
+                });
+            });
+
+            // 3. Limpiar los que no tienen datos
+            caballos.forEach(c => {
+                if(c.tpAjustado === "Sin Datos") {
+                    c.ranking = "-";
+                    c.dif = "-";
+                    c.est = "-";
+                }
+            });
+
+            guardar();
+        }
+
+        function limpiarTodo() {
+            if(confirm("¿Estás seguro de que quieres borrar todos los datos?")) {
+                caballos = [];
+                guardar();
+            }
+        }
+
+        // Inicializar tabla al cargar
+        renderTabla();
+    </script>
+</body>
+</html>
