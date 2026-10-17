@@ -3,84 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO</title>
+    <title>Sistema Hípico PRO - Multi Hipódromo</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e24; color: #fff; padding: 20px; }
         h1 { color: #4caf50; text-align: center; }
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        input, select { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #2a2a35; color: white; }
-        button { padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; align-items: center; background: #2a2a35; padding: 15px; border-radius: 8px; }
+        input, select { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #1e1e24; color: white; }
+        button { padding: 10px 15px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         button:hover { background: #45a049; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2a2a35; }
-        th, td { padding: 10px; text-align: center; border-bottom: 1px solid #444; }
-        th { background: #333; color: #4caf50; }
-        .rankin-1 { background-color: #2e7d32; font-weight: bold; }
-        .rankin-2 { background-color: #f9a825; color: #000; }
-        .rankin-3 { background-color: #ef6c00; }
-        .desc { color: #888; }
+        .btn-blue { background: #2196F3; }
+        .btn-blue:hover { background: #1976D2; }
+        .btn-red { background: #f44336; }
+        .btn-red:hover { background: #d32f2f; }
+        .btn-orange { background: #ff9800; color: #000; }
+        .btn-orange:hover { background: #f57c00; }
+        
+        /* Tabla */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #2a2a35; font-size: 14px; }
+        th, td { padding: 8px; text-align: center; border-bottom: 1px solid #444; }
+        th { background: #333; color: #4caf50; position: sticky; top: 0; }
+        
+        /* Colores de Ranking */
+        .rankin-1 { background-color: #2e7d32; font-weight: bold; color: white; }
+        .rankin-2 { background-color: #f9a825; color: #000; font-weight: bold; }
+        .rankin-3 { background-color: #ef6c00; color: white; font-weight: bold; }
+        .sin-datos { color: #888; font-style: italic; }
     </style>
 </head>
 <body>
 
     <h1>🏇 Sistema Hípico PRO</h1>
 
+    <!-- Controles de Entrada -->
     <div class="controls">
-        <input type="number" id="carrera" placeholder="N° Carrera" style="width: 100px;">
-        <input type="number" id="distancia" placeholder="Distancia (Ej: 1200)" style="width: 150px;">
+        <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo (Ej: La Rinconada)" style="width: 180px;">
+        <datalist id="hipodromos">
+            <option value="La Rinconada">
+            <option value="Keeneland">
+            <option value="Charles Town">
+            <option value="Gulfstream">
+            <option value="Santa Anita">
+        </datalist>
+
+        <input type="number" id="carrera" placeholder="N° Carrera" style="width: 90px;">
+        <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
         <button onclick="agregarCaballo()">➕ Agregar Caballo</button>
-        <button onclick="calcularTodo()" style="background: #2196F3;">🧮 Calcular TP y Ranking</button>
-        <button onclick="limpiarTodo()" style="background: #f44336;">🗑️ Limpiar Todo</button>
+        <button onclick="calcularTodo()" class="btn-blue">🧮 Calcular</button>
+        
+        <!-- Filtro de visualización -->
+        <select id="filtroHipodromo" onchange="renderTabla()" style="margin-left: 20px;">
+            <option value="TODOS">Ver Todos los Hipódromos</option>
+        </select>
+
+        <!-- Botones de Respaldo -->
+        <button onclick="exportarDatos()" class="btn-orange" style="margin-left: 20px;">💾 Descargar Respaldo</button>
+        <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
+        <button onclick="document.getElementById('importarArchivo').click()" class="btn-orange">📂 Cargar Respaldo</button>
+        <button onclick="limpiarTodo()" class="btn-red">🗑️ Limpiar Todo</button>
     </div>
 
-    <table id="tablaCaballos">
-        <thead>
-            <tr>
-                <th>Nro</th>
-                <th>T1</th>
-                <th>T2</th>
-                <th>T3</th>
-                <th>T4</th>
-                <th>T5</th>
-                <th>D1</th>
-                <th>D2</th>
-                <th>D3</th>
-                <th>D4</th>
-                <th>D5</th>
-                <th>Puesto</th>
-                <th>Kilos</th>
-                <th>TP Real</th>
-                <th>Ajuste</th>
-                <th>TP Ajustado</th>
-                <th>Ranking</th>
-                <th>Dif</th>
-                <th>Est</th>
-            </tr>
-        </thead>
-        <tbody id="cuerpoTabla">
-            <!-- Aquí se agregarán los caballos -->
-        </tbody>
-    </table>
+    <!-- Tabla de Datos -->
+    <div class="table-container">
+        <table id="tablaCaballos">
+            <thead>
+                <tr>
+                    <th>Hipódromo</th>
+                    <th>Carrera</th>
+                    <th>Nro</th>
+                    <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
+                    <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
+                    <th>Puesto</th>
+                    <th>Kilos</th>
+                    <th>TP Real</th>
+                    <th>Ajuste</th>
+                    <th>TP Ajustado</th>
+                    <th>Ranking</th>
+                    <th>Dif</th>
+                    <th>Est</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Los datos se cargan aquí -->
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        // Lógica de la aplicación
-        let caballos = JSON.parse(localStorage.getItem('caballosHipicos')) || [];
+        // Cargar datos del almacenamiento local
+        let caballos = JSON.parse(localStorage.getItem('caballosHipicosPro')) || [];
 
+        // Guardar en almacenamiento local
         function guardar() {
-            localStorage.setItem('caballosHipicos', JSON.stringify(caballos));
+            localStorage.setItem('caballosHipicosPro', JSON.stringify(caballos));
             renderTabla();
+            actualizarFiltro();
         }
 
+        // Agregar un nuevo caballo a la lista
         function agregarCaballo() {
+            const hipodromo = document.getElementById('hipodromo').value.trim();
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
             
-            if(!carrera || !distancia) {
-                alert("Por favor, ingresa el número de carrera y la distancia primero.");
+            if(!hipodromo || !carrera || !distancia) {
+                alert("Por favor, llena el Hipódromo, N° de Carrera y Distancia antes de agregar.");
                 return;
             }
 
             const nuevoCaballo = {
                 id: Date.now(),
+                hipodromo: hipodromo,
                 carrera: parseInt(carrera),
                 distanciaHoy: parseInt(distancia),
                 nro: '', t1: '', t2: '', t3: '', t4: '', t5: '',
@@ -92,6 +125,7 @@
             guardar();
         }
 
+        // Actualizar un dato específico cuando se escribe en la tabla
         function actualizarDato(id, campo, valor) {
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
@@ -100,37 +134,61 @@
             }
         }
 
+        // Actualizar el menú desplegable de filtros
+        function actualizarFiltro() {
+            const select = document.getElementById('filtroHipodromo');
+            const valorActual = select.value;
+            const hipodromos = [...new Set(caballos.map(c => c.hipodromo))];
+            
+            select.innerHTML = '<option value="TODOS">Ver Todos los Hipódromos</option>';
+            hipodromos.forEach(h => {
+                select.innerHTML += `<option value="${h}">${h}</option>`;
+            });
+            
+            if (hipodromos.includes(valorActual) || valorActual === "TODOS") {
+                select.value = valorActual;
+            }
+        }
+
+        // Dibujar la tabla en pantalla
         function renderTabla() {
             const tbody = document.getElementById('cuerpoTabla');
+            const filtro = document.getElementById('filtroHipodromo').value;
             tbody.innerHTML = '';
             
-            caballos.forEach(c => {
+            // Filtrar por hipódromo seleccionado
+            const caballosFiltrados = filtro === "TODOS" ? caballos : caballos.filter(c => c.hipodromo === filtro);
+
+            caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><input type="number" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" style="width: 50px;"></td>
-                    <td><input type="number" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" style="width: 60px;"></td>
-                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" style="width: 60px;"></td>
-                    <td id="tp-${c.id}">${c.tpReal}</td>
-                    <td id="aj-${c.id}">${c.ajuste}</td>
-                    <td id="tpa-${c.id}">${c.tpAjustado}</td>
-                    <td id="rank-${c.id}" class="${c.ranking === 1 ? 'rankin-1' : c.ranking === 2 ? 'rankin-2' : c.ranking === 3 ? 'rankin-3' : ''}">${c.ranking}</td>
-                    <td id="dif-${c.id}">${c.dif}</td>
-                    <td id="est-${c.id}">${c.est}</td>
+                    <td><b>${c.hipodromo}</b></td>
+                    <td>${c.carrera}</td>
+                    <td><input type="number" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" style="width: 45px;"></td>
+                    <td><input type="number" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" style="width: 55px;"></td>
+                    <td><input type="number" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" style="width: 55px;"></td>
+                    <td>${c.tpReal}</td>
+                    <td>${c.ajuste}</td>
+                    <td><b>${c.tpAjustado}</b></td>
+                    <td class="${c.ranking === 1 ? 'rankin-1' : c.ranking === 2 ? 'rankin-2' : c.ranking === 3 ? 'rankin-3' : ''}">${c.ranking}</td>
+                    <td>${c.dif}</td>
+                    <td>${c.est}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
+        // Lógica principal de cálculo
         function calcularTodo() {
             if(caballos.length === 0) return;
 
@@ -176,11 +234,12 @@
                 }
             });
 
-            // 2. Calcular Ranking y Diferencia por Carrera
-            const carreras = [...new Set(caballos.map(c => c.carrera))];
+            // 2. Calcular Ranking por Hipódromo Y Carrera
+            // Creamos una clave única combinando hipódromo y número de carrera
+            const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - Carrera ${c.carrera}`))];
             
-            carreras.forEach(carreraNum => {
-                let caballosCarrera = caballos.filter(c => c.carrera === carreraNum && c.tpAjustado !== "Sin Datos");
+            carrerasUnicas.forEach(claveUnica => {
+                let caballosCarrera = caballos.filter(c => `${c.hipodromo} - Carrera ${c.carrera}` === claveUnica && c.tpAjustado !== "Sin Datos");
                 
                 if(caballosCarrera.length === 0) return;
 
@@ -211,14 +270,49 @@
             guardar();
         }
 
+        // --- SISTEMA DE RESPALDO ---
+
+        function exportarDatos() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(caballos));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "respaldo_hipico_" + new Date().toISOString().slice(0,10) + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importarDatos(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const contenido = JSON.parse(e.target.result);
+                    if(Array.isArray(contenido)) {
+                        caballos = contenido;
+                        guardar();
+                        alert("¡Datos cargados exitosamente!");
+                    } else {
+                        alert("El archivo no tiene el formato correcto.");
+                    }
+                } catch (error) {
+                    alert("Error al leer el archivo.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
         function limpiarTodo() {
-            if(confirm("¿Estás seguro de que quieres borrar todos los datos?")) {
+            if(confirm("¿Estás seguro de que quieres borrar todos los datos actuales?")) {
                 caballos = [];
                 guardar();
             }
         }
 
-        // Inicializar tabla al cargar
+        // Inicializar
+        actualizarFiltro();
         renderTabla();
     </script>
 </body>
