@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO | Dashboard</title>
+    <title>Sistema Hípico PRO | Dashboard Élite</title>
     <style>
         :root {
             --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
@@ -19,8 +19,40 @@
             background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-size: 14px;
         }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
         h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Panel de Podio */
+        .podium-panel {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        .podium-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .podium-horse { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .pos-1 { color: var(--success); }
+        .pos-2 { color: var(--warning); }
+        .pos-3 { color: #f97316; }
+
+        .pace-alert {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            display: none; /* Oculto por defecto */
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
 
         .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .group-inputs { display: flex; gap: 10px; flex: 1; }
@@ -34,16 +66,18 @@
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
         .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
 
-        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 70vh; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 65vh; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; white-space: nowrap; }
         th { background-color: #1e293b; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; }
         td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); transition: background-color 0.2s; height: 40px; }
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
+        /* Sticky Columns */
         th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(2), td:nth-child(2) { position: sticky; left: 100px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(3), td:nth-child(3) { position: sticky; left: 150px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
-        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3) { background-color: #26334d; }
+        th:nth-child(2), td:nth-child(2) { position: sticky; left: 80px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(3), td:nth-child(3) { position: sticky; left: 130px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(4), td:nth-child(4) { position: sticky; left: 180px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
+        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3), tr:hover td:nth-child(4) { background-color: #26334d; }
 
         td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 14px;}
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
@@ -69,22 +103,43 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v2.4 - Dashboard Analítico</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v3.0 - Dashboard Élite</div>
     </header>
+
+    <!-- PANEL DE PODIO (GANADORES) -->
+    <div class="podium-panel" id="podiumPanel" style="display: none;">
+        <div>
+            <div class="podium-title">🏆 1er Lugar (Ganador)</div>
+            <div class="podium-horse pos-1" id="podio1">-</div>
+        </div>
+        <div>
+            <div class="podium-title">🥈 2do Lugar</div>
+            <div class="podium-horse pos-2" id="podio2">-</div>
+        </div>
+        <div>
+            <div class="podium-title">🥉 3er Lugar</div>
+            <div class="podium-horse pos-3" id="podio3">-</div>
+        </div>
+    </div>
+
+    <!-- ALERTA DE RITMO -->
+    <div class="pace-alert" id="paceAlert">
+        ⚠️ <span id="paceAlertText">Alerta: Múltiples caballos con estilo "E" pelearán la punta. Favorece a los "S".</span>
+    </div>
 
     <div class="panel">
         <div class="group-inputs">
-            <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo" style="width: 150px;">
+            <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo" style="width: 130px;">
             <datalist id="hipodromos">
                 <option value="La Rinconada"><option value="Keeneland"><option value="Charles Town"><option value="Gulfstream"><option value="Santa Anita">
             </datalist>
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 110px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 130px;">
-            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir Ejemplar</button>
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
+            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir</button>
         </div>
         
         <select id="filtroHipodromo" onchange="renderTabla()" style="width: 180px; background: #0f172a;">
-            <option value="TODOS">🌐 Ver Todos los Hipódromos</option>
+            <option value="TODOS">🌐 Ver Todos</option>
         </select>
     </div>
 
@@ -93,7 +148,7 @@
             <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos</button>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button onclick="exportarCSV()" class="btn-outline">📊 Exportar a Excel</button>
+            <button onclick="exportarCSV()" class="btn-outline">📊 Exportar</button>
             <button onclick="exportarDatos()" class="btn-outline">💾 Respaldo</button>
             <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
             <button onclick="document.getElementById('importarArchivo').click()" class="btn-outline">📂 Restaurar</button>
@@ -105,9 +160,10 @@
         <table>
             <thead>
                 <tr>
-                    <th style="width: 100px;">Hipódromo</th>
+                    <th style="width: 80px;">Hipódromo</th>
                     <th style="width: 50px;">Carr.</th>
                     <th style="width: 50px;">Nro</th>
+                    <th style="width: 120px;">Ejemplar</th>
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Puesto</th><th>Kilos</th>
@@ -135,19 +191,15 @@
             return parseFloat(valor);
         }
 
-        // Función para convertir fracciones (8/5) o decimales (2.5) a Cuota Decimal
         function parseOdds(valor) {
             if (!valor) return NaN;
             valor = valor.toString().trim();
-            
             if (valor.includes('/') || valor.includes('-')) {
                 const partes = valor.split(/[\/\-]/);
                 if (partes.length === 2) {
                     const num = parseFloat(partes[0]);
                     const den = parseFloat(partes[1]);
-                    if (!isNaN(num) && !isNaN(den) && den !== 0) {
-                        return (num / den) + 1; // Ej: 8/5 = 1.6 + 1 = 2.60
-                    }
+                    if (!isNaN(num) && !isNaN(den) && den !== 0) return (num / den) + 1; 
                 }
             }
             return parseFloat(valor);
@@ -171,10 +223,7 @@
             const distancia = document.getElementById('distancia').value;
             
             if(!hipodromo || !carrera || !distancia) {
-                if (caballos.length === 0) {
-                    alert("Por favor llena Hipódromo, Carrera y Distancia primero.");
-                    return;
-                }
+                if (caballos.length === 0) { alert("Llena Hipódromo, Carrera y Distancia."); return; }
             }
 
             const hFinal = hipodromo || caballos[caballos.length-1].hipodromo;
@@ -183,7 +232,7 @@
 
             caballos.push({
                 id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
-                nro: '', t1: '', t2: '', t3: '', t4: '', t5: '',
+                nro: '', name: '', t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
@@ -196,12 +245,8 @@
                 setTimeout(() => {
                     const rows = document.querySelectorAll('#cuerpoTabla tr');
                     if (rows.length > 0) {
-                        const lastRow = rows[rows.length - 1];
-                        const firstInput = lastRow.querySelector('input');
-                        if (firstInput) {
-                            firstInput.focus();
-                            firstInput.select(); 
-                        }
+                        const firstInput = rows[rows.length - 1].querySelector('input');
+                        if (firstInput) { firstInput.focus(); firstInput.select(); }
                     }
                 }, 50);
             }
@@ -212,7 +257,7 @@
             const valorActual = select.value;
             const hipodromos = [...new Set(caballos.map(c => c.hipodromo))];
             
-            select.innerHTML = '<option value="TODOS">🌐 Ver Todos los Hipódromos</option>';
+            select.innerHTML = '<option value="TODOS">🌐 Ver Todos</option>';
             hipodromos.forEach(h => select.innerHTML += `<option value="${h}">${h}</option>`);
             if (hipodromos.includes(valorActual) || valorActual === "TODOS") select.value = valorActual;
         }
@@ -221,26 +266,20 @@
             const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
             const isLastInput = (e.target === inputs[inputs.length - 1]);
 
-            if (e.key === 'Tab' && !e.shiftKey) {
-                if (isLastInput) {
-                    e.preventDefault(); 
-                    agregarCaballo(true); 
-                }
+            if (e.key === 'Tab' && !e.shiftKey && isLastInput) {
+                e.preventDefault(); agregarCaballo(true); 
             } 
             else if (e.key === 'Enter') {
                 e.preventDefault();
-                if (isLastInput) {
-                    agregarCaballo(true);
-                } else {
+                if (isLastInput) { agregarCaballo(true); } 
+                else {
                     const tr = e.target.closest('tr');
                     const nextTr = tr.nextElementSibling;
                     if (nextTr) {
                         const cellIndex = e.target.closest('td').cellIndex;
                         const nextInput = nextTr.cells[cellIndex].querySelector('input, select');
                         if (nextInput) nextInput.focus();
-                    } else {
-                        agregarCaballo(true);
-                    }
+                    } else { agregarCaballo(true); }
                 }
             }
         }
@@ -261,13 +300,13 @@
 
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
-                if (animarUltimaFila && c.id === lastId) {
-                    tr.classList.add('new-row');
-                }
+                if (animarUltimaFila && c.id === lastId) tr.classList.add('new-row');
+                
                 tr.innerHTML = `
                     <td><span style="font-weight: 600; color: #94a3b8;">${c.hipodromo}</span></td>
                     <td>${c.carrera}</td>
                     <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)"></td>
                     <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)"></td>
                     <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)"></td>
                     <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)"></td>
@@ -286,8 +325,6 @@
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
                     <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
-                    
-                    <!-- CAMPO MORNING LINE CORREGIDO: type="text" -->
                     <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="Ej: 8/5" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
                     
                     <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
@@ -308,9 +345,56 @@
 
             if (activeId && activeField) {
                 const inputToFocus = document.querySelector(`input[data-id="${activeId}"][data-field="${activeField}"], select[data-id="${activeId}"][data-field="${activeField}"]`);
-                if (inputToFocus) {
-                    inputToFocus.focus();
-                }
+                if (inputToFocus) inputToFocus.focus();
+            }
+
+            actualizarPodio();
+        }
+
+        function actualizarPodio() {
+            const filtro = document.getElementById('filtroHipodromo').value;
+            const panel = document.getElementById('podiumPanel');
+            const paceAlert = document.getElementById('paceAlert');
+            
+            // Si no hay datos calculados, ocultar
+            const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "");
+            
+            if (caballosFiltrados.length === 0) {
+                panel.style.display = 'none';
+                paceAlert.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'flex';
+
+            // Obtener Top 3 de la última carrera seleccionada/filtrada
+            const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera;
+            const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
+            
+            const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-");
+            
+            const p1 = topCarrera.find(c => c.ranking === 1);
+            const p2 = topCarrera.find(c => c.ranking === 2);
+            const p3 = topCarrera.find(c => c.ranking === 3);
+
+            document.getElementById('podio1').innerHTML = p1 ? `<span style="font-size:20px;">#${p1.nro}</span> ${p1.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p1.tpAjustado})</span>` : '-';
+            document.getElementById('podio2').innerHTML = p2 ? `<span style="font-size:20px;">#${p2.nro}</span> ${p2.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p2.tpAjustado})</span>` : '-';
+            document.getElementById('podio3').innerHTML = p3 ? `<span style="font-size:20px;">#${p3.nro}</span> ${p3.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p3.tpAjustado})</span>` : '-';
+
+            // Lógica de Pace Scenario
+            const earlyHorses = topCarrera.filter(c => (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5);
+            
+            if (earlyHorses.length >= 3) {
+                paceAlert.style.display = 'flex';
+                document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida (E o E/P). Se van a quemar peleando la punta. Favorece a los ejemplares con estilo "S" (Sustained).`;
+            } else if (earlyHorses.length === 1 && topCarrera.length > 3) {
+                paceAlert.style.display = 'flex';
+                paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                paceAlert.style.borderColor = 'var(--success)';
+                paceAlert.style.color = '#6ee7b7';
+                document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse y "robarse" la carrera de punta a punta.`;
+            } else {
+                paceAlert.style.display = 'none';
             }
         }
 
@@ -369,7 +453,7 @@
             
             guardarSilencioso();
             renderTabla(); 
-            alert("¡Cálculos ejecutados con éxito! Revisa el Ranking y Alertas.");
+            alert("¡Cálculos ejecutados! Revisa el Podio y las Alertas de Ritmo.");
         }
 
         function exportarDatos() {
@@ -385,20 +469,20 @@
             reader.onload = function(e) {
                 try {
                     const contenido = JSON.parse(e.target.result);
-                    if(Array.isArray(contenido)) { caballos = contenido; guardarSilencioso(); renderTabla(); alert("¡Datos cargados exitosamente!"); }
+                    if(Array.isArray(contenido)) { caballos = contenido; guardarSilencioso(); renderTabla(); alert("¡Datos cargados!"); }
                 } catch (error) { alert("Error al leer el archivo."); }
             };
             reader.readAsText(event.target.files[0]);
         }
 
         function limpiarTodo() {
-            if(confirm("¿Borrar todos los datos actuales? Asegúrate de tener un respaldo.")) { caballos = []; guardarSilencioso(); renderTabla(); }
+            if(confirm("¿Borrar todos los datos actuales?")) { caballos = []; guardarSilencioso(); renderTabla(); }
         }
 
         function exportarCSV() {
-            if(caballos.length === 0) return alert("No hay datos para exportar.");
-            const cabeceras = ["Hipodromo", "Carrera", "Nro", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine"];
-            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml].join(","));
+            if(caballos.length === 0) return alert("No hay datos.");
+            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine"];
+            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml].join(","));
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
