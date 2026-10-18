@@ -45,12 +45,14 @@
 
         .ticket-panel {
             flex: 1; background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent);
-            border-radius: 10px; padding: 15px; display: none; flex-direction: column; justify-content: center;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            border-radius: 10px; padding: 15px; display: none; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 250px;
         }
         .ticket-panel h3 { color: #60a5fa; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 5px; }
         .ticket-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
         .ticket-line span:last-child { font-weight: bold; color: var(--gold); }
+        .btn-copy { background: var(--accent); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-top: 10px; width: 100%; transition: 0.2s; }
+        .btn-copy:hover { background: var(--accent-hover); }
         
         .pace-alert {
             background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5;
@@ -118,7 +120,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v4.1 - Control de Retiros</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v5.0 - Gestión de Jugadas</div>
     </header>
 
     <!-- DASHBOARD SUPERIOR (Podio + Ticket) -->
@@ -141,12 +143,16 @@
             </div>
         </div>
 
+        <!-- PANEL DEL TICKET (Aquí está el generador) -->
         <div class="ticket-panel" id="ticketPanel">
-            <h3>🎫 Jugada Sugerida</h3>
-            <div class="ticket-line"><span>Ganador:</span> <span id="tkWin">-</span></div>
-            <div class="ticket-line"><span>Exacta:</span> <span id="tkExacta">-</span></div>
-            <div class="ticket-line"><span>Trifecta:</span> <span id="tkTrifecta">-</span></div>
-            <div class="ticket-line"><span>Pool de 4:</span> <span id="tkPool">-</span></div>
+            <div>
+                <h3>🎫 Jugada Sugerida</h3>
+                <div class="ticket-line"><span>Ganador:</span> <span id="tkWin">-</span></div>
+                <div class="ticket-line"><span>Exacta:</span> <span id="tkExacta">-</span></div>
+                <div class="ticket-line"><span>Trifecta:</span> <span id="tkTrifecta">-</span></div>
+                <div class="ticket-line"><span>Pool de 4:</span> <span id="tkPool">-</span></div>
+            </div>
+            <button class="btn-copy" onclick="copiarTicket()">📋 Copiar Jugada</button>
         </div>
     </div>
 
@@ -173,7 +179,8 @@
 
     <div class="panel" style="justify-content: space-between;">
         <div style="display: flex; gap: 10px;">
-            <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos</button>
+            <!-- Botón que activa el Ticket Generator -->
+            <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos (Generar Ticket)</button>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="exportarCSV()" class="btn-outline">📊 Exportar</button>
@@ -248,13 +255,12 @@
             }
         }
 
-        // Función Mágica para Retirar / Restaurar
         function toggleRetirado(id) {
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
-                caballo.scratched = !caballo.scratched; // Cambia el estado
+                caballo.scratched = !caballo.scratched; 
                 guardarSilencioso();
-                calcularTodo(); // Recalcula TODO automáticamente
+                calcularTodo(); 
             }
         }
 
@@ -273,7 +279,7 @@
 
             caballos.push({
                 id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
-                scratched: false, // Nuevo atributo
+                scratched: false, 
                 nro: '', name: '', jockey: '', trainer: '', notes: '',
                 t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
@@ -344,7 +350,7 @@
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 if (animarUltimaFila && c.id === lastId) tr.classList.add('new-row');
-                if (c.scratched) tr.classList.add('row-scratched'); // Clase visual si está retirado
+                if (c.scratched) tr.classList.add('row-scratched'); 
                 
                 tr.innerHTML = `
                     <td>
@@ -409,7 +415,6 @@
             const ticketPanel = document.getElementById('ticketPanel');
             const paceAlert = document.getElementById('paceAlert');
             
-            // FILTRO CRÍTICO: Ignorar los caballos retirados
             const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
             
             if (caballosFiltrados.length === 0) {
@@ -420,12 +425,11 @@
             }
 
             panel.style.display = 'flex';
-            ticketPanel.style.display = 'flex';
+            ticketPanel.style.display = 'flex'; // AQUÍ SE MUESTRA EL TICKET
 
             const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera;
             const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
             
-            // FILTRO CRÍTICO EN EL PODIO
             const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-" && !c.scratched).sort((a,b) => a.ranking - b.ranking);
             
             const p1 = topCarrera[0];
@@ -482,11 +486,31 @@
             }
         }
 
+        // NUEVA FUNCIÓN PARA COPIAR EL TICKET
+        function copiarTicket() {
+            const win = document.getElementById('tkWin').innerText;
+            const exacta = document.getElementById('tkExacta').innerText;
+            const trifecta = document.getElementById('tkTrifecta').innerText;
+            const pool = document.getElementById('tkPool').innerText;
+
+            if (win === '-') {
+                alert("Primero debes ejecutar los cálculos mágicos para generar un ticket.");
+                return;
+            }
+
+            const texto = `🏇 *MI JUGADA HÍPICA*\n\n🏆 Ganador: ${win}\n🥈 Exacta: ${exacta}\n🥉 Trifecta: ${trifecta}\n💰 Pool: ${pool}\n\n_Creado con Sistema Hípico PRO_`;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("¡Jugada copiada al portapapeles! Lista para pegar en WhatsApp.");
+            }).catch(err => {
+                alert("Error al copiar. Tu navegador no soporta esta función.");
+            });
+        }
+
         function calcularTodo() {
             if(caballos.length === 0) return;
 
             caballos.forEach(c => {
-                // Si está retirado, saltamos el cálculo y limpiamos sus resultados
                 if (c.scratched) {
                     c.tpReal = "Retirado";
                     c.ajuste = "-";
@@ -524,7 +548,6 @@
             const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
             
             carrerasUnicas.forEach(clave => {
-                // FILTRO CRÍTICO EN EL RANKING: Ignorar retirados
                 let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "Sin Datos" && !c.scratched);
                 if(lista.length === 0) return;
 
@@ -550,6 +573,7 @@
             
             guardarSilencioso();
             renderTabla(); 
+            alert("¡Cálculos ejecutados! Revisa el Ticket arriba a la derecha.");
         }
 
         function exportarDatos() {
