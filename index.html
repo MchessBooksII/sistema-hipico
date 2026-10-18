@@ -69,7 +69,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v2.3 - Dashboard Analítico</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v2.4 - Dashboard Analítico</div>
     </header>
 
     <div class="panel">
@@ -140,7 +140,6 @@
             if (!valor) return NaN;
             valor = valor.toString().trim();
             
-            // Si tiene barra (8/5) o guion (8-5)
             if (valor.includes('/') || valor.includes('-')) {
                 const partes = valor.split(/[\/\-]/);
                 if (partes.length === 2) {
@@ -151,7 +150,6 @@
                     }
                 }
             }
-            // Si ya es un número decimal directo
             return parseFloat(valor);
         }
 
@@ -289,7 +287,7 @@
                     </select></td>
                     <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
                     
-                    <!-- CAMBIO AQUÍ: type="text" para aceptar 8/5 -->
+                    <!-- CAMPO MORNING LINE CORREGIDO: type="text" -->
                     <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="Ej: 8/5" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
                     
                     <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
@@ -357,7 +355,6 @@
                     c.dif = (parseFloat(c.tpAjustado) - mejorTiempo).toFixed(2);
                     c.est = c.dif <= 0.3 ? "***" : c.dif <= 0.8 ? "**" : "*";
                     
-                    // Conversión de Morning Line a decimal para la alerta
                     const mlDecimal = parseOdds(c.ml);
                     if (!isNaN(mlDecimal)) {
                         if (c.ranking === 1 && mlDecimal >= 4.0) c.alerta = "VALOR";
