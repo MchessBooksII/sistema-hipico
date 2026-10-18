@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO | Dashboard Élite</title>
+    <title>Sistema Hípico PRO | Dashboard Multi-Hipódromo</title>
     <style>
         :root {
             --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
@@ -120,7 +120,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v8.0 - Top 10 Jinetes/Entrenadores</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v9.0 - Multi-Hipódromo</div>
     </header>
 
     <div class="top-dashboard">
@@ -158,15 +158,23 @@
         ⚠️ <span id="paceAlertText"></span>
     </div>
 
+    <!-- BARRA DE CONTROL PRINCIPAL -->
     <div class="panel">
-        <div class="group-inputs">
-            <input type="text" id="hipodromo" list="hipodromos" placeholder="Hipódromo" style="width: 130px;">
-            <datalist id="hipodromos">
-                <option value="La Rinconada"><option value="Keeneland"><option value="Charles Town"><option value="Gulfstream"><option value="Santa Anita">
-            </datalist>
+        <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
+            <label style="color: var(--gold); font-weight: bold;">Hipódromo Activo:</label>
+            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 200px; border-color: var(--gold); font-weight: bold; color: var(--gold);">
+                <option value="La Rinconada">🇻🇪 La Rinconada</option>
+                <option value="Keeneland">🇺🇸 Keeneland</option>
+                <option value="Charles Town">🇺🇸 Charles Town</option>
+                <option value="Gulfstream">🇺🇸 Gulfstream</option>
+                <option value="Santa Anita">🇺🇸 Santa Anita</option>
+            </select>
+        </div>
+        
+        <div class="group-inputs" style="flex: 2;">
             <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px;">
             <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
-            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir</button>
+            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir Ejemplar</button>
         </div>
         
         <select id="filtroHipodromo" onchange="renderTabla()" style="width: 180px; background: #0f172a;">
@@ -197,9 +205,8 @@
                     <th style="width: 50px;">Nro</th>
                     <th style="width: 120px;">Ejemplar</th>
                     
-                    <!-- NUEVAS COLUMNAS DE SELECCIÓN -->
-                    <th style="color: #60a5fa; font-size: 10px;">Jinete (Top 10)</th>
-                    <th style="color: #10b981; font-size: 10px;">Entrenador (Top 10)</th>
+                    <th style="color: #60a5fa; font-size: 10px;">Jinete</th>
+                    <th style="color: #10b981; font-size: 10px;">Entrenador</th>
                     <th style="color: var(--gold); font-size: 10px;">Índice Eq.</th>
                     
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
@@ -218,34 +225,71 @@
     </div>
 
     <script>
-        // --- BASE DE DATOS TOP 10 ---
-        const JOCKEYS = {
-            "Jaime Lugo": { win: 24, place: 49 },
-            "Jonathan Aray": { win: 17, place: 44 },
-            "Roberth Capriles": { win: 17, place: 48 },
-            "Jaime Lugo C.": { win: 15, place: 39 },
-            "Oliver Medina": { win: 14, place: 43 },
-            "Yoelbis González": { win: 13, place: 39 },
-            "Francisco Quevedo": { win: 13, place: 41 },
-            "Johan E. Aranguren": { win: 16, place: 35 },
-            "Winder Véliz": { win: 10, place: 46 },
-            "Félix Márquez": { win: 14, place: 33 }
+        // --- BASE DE DATOS MULTI-HIPÓDROMO ---
+        // Aquí puedes agregar los jinetes y entrenadores de cada hipódromo.
+        const DB_HIPODROMOS = {
+            "La Rinconada": {
+                jockeys: {
+                    "Jaime Lugo": { win: 24, place: 49 },
+                    "Jonathan Aray": { win: 17, place: 44 },
+                    "Roberth Capriles": { win: 17, place: 48 },
+                    "Jaime Lugo C.": { win: 15, place: 39 },
+                    "Oliver Medina": { win: 14, place: 43 },
+                    "Yoelbis González": { win: 13, place: 39 },
+                    "Francisco Quevedo": { win: 13, place: 41 },
+                    "Johan E. Aranguren": { win: 16, place: 35 },
+                    "Winder Véliz": { win: 10, place: 46 },
+                    "Félix Márquez": { win: 14, place: 33 }
+                },
+                trainers: {
+                    "Riccardo D'Angelo": { win: 21, place: 46 },
+                    "Fernando Parilli T.": { win: 15, place: 39 },
+                    "Gabriel Márquez": { win: 19, place: 46 },
+                    "Carlos L. Uzcátegui": { win: 13, place: 34 },
+                    "Humberto Correa": { win: 19, place: 40 },
+                    "Fernando Parilli": { win: 14, place: 47 },
+                    "Oscar González": { win: 13, place: 40 },
+                    "Jorge Salvador": { win: 13, place: 36 },
+                    "Ismael Martínez": { win: 17, place: 44 },
+                    "Henry Trujillo": { win: 7, place: 19 }
+                }
+            },
+            "Keeneland": {
+                // AQUÍ PUEDES AGREGAR LOS JINETES DE KEENELAND (Ejemplo vacío)
+                jockeys: {
+                    "Irad Ortiz Jr": { win: 25, place: 55 },
+                    "Tyler Gaffalione": { win: 20, place: 48 },
+                    // Agrega más aquí...
+                },
+                trainers: {
+                    "Brad Cox": { win: 22, place: 50 },
+                    "Todd Pletcher": { win: 18, place: 45 },
+                    // Agrega más aquí...
+                }
+            },
+            "Charles Town": {
+                jockeys: {}, // Agrega los de Charles Town
+                trainers: {}
+            }
         };
 
-        const TRAINERS = {
-            "Riccardo D'Angelo": { win: 21, place: 46 },
-            "Fernando Parilli T.": { win: 15, place: 39 },
-            "Gabriel Márquez": { win: 19, place: 46 },
-            "Carlos L. Uzcátegui": { win: 13, place: 34 },
-            "Humberto Correa": { win: 19, place: 40 },
-            "Fernando Parilli": { win: 14, place: 47 },
-            "Oscar González": { win: 13, place: 40 },
-            "Jorge Salvador": { win: 13, place: 36 },
-            "Ismael Martínez": { win: 17, place: 44 },
-            "Henry Trujillo": { win: 7, place: 19 }
-        };
+        // Variables globales que se actualizarán según el hipódromo
+        let JOCKEYS_ACTUALES = DB_HIPODROMOS["La Rinconada"].jockeys;
+        let TRAINERS_ACTUALES = DB_HIPODROMOS["La Rinconada"].trainers;
 
         let caballos = JSON.parse(localStorage.getItem('caballosHipicosElite')) || [];
+
+        function cambiarHipodromo() {
+            const hipo = document.getElementById('hipodromoActivo').value;
+            if (DB_HIPODROMOS[hipo]) {
+                JOCKEYS_ACTUALES = DB_HIPODROMOS[hipo].jockeys;
+                TRAINERS_ACTUALES = DB_HIPODROMOS[hipo].trainers;
+            } else {
+                JOCKEYS_ACTUALES = {};
+                TRAINERS_ACTUALES = {};
+            }
+            renderTabla(); // Redibujar para actualizar las listas
+        }
 
         function parseTiempo(valor) {
             if (!valor) return NaN;
@@ -283,19 +327,18 @@
             }
         }
 
-        // --- FUNCIONES PARA SELECCIONAR JINETE/ENTRENADOR ---
         function seleccionarJockey(id, nombre) {
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
                 caballo.jockey_name = nombre;
-                if (JOCKEYS[nombre]) {
-                    caballo.j_win = JOCKEYS[nombre].win;
-                    caballo.j_place = JOCKEYS[nombre].place;
+                if (JOCKEYS_ACTUALES[nombre]) {
+                    caballo.j_win = JOCKEYS_ACTUALES[nombre].win;
+                    caballo.j_place = JOCKEYS_ACTUALES[nombre].place;
                 } else {
                     caballo.j_win = ''; caballo.j_place = '';
                 }
                 guardarSilencioso();
-                calcularTodo(); // Recalcular automáticamente
+                calcularTodo(); 
             }
         }
 
@@ -303,14 +346,14 @@
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
                 caballo.trainer_name = nombre;
-                if (TRAINERS[nombre]) {
-                    caballo.t_win = TRAINERS[nombre].win;
-                    caballo.t_place = TRAINERS[nombre].place;
+                if (TRAINERS_ACTUALES[nombre]) {
+                    caballo.t_win = TRAINERS_ACTUALES[nombre].win;
+                    caballo.t_place = TRAINERS_ACTUALES[nombre].place;
                 } else {
                     caballo.t_win = ''; caballo.t_place = '';
                 }
                 guardarSilencioso();
-                calcularTodo(); // Recalcular automáticamente
+                calcularTodo(); 
             }
         }
 
@@ -324,20 +367,16 @@
         }
 
         function agregarCaballo(focusAuto = false) {
-            const hipodromo = document.getElementById('hipodromo').value.trim();
+            const hipodromo = document.getElementById('hipodromoActivo').value;
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
             
-            if(!hipodromo || !carrera || !distancia) {
-                if (caballos.length === 0) { alert("Llena Hipódromo, Carrera y Distancia."); return; }
+            if(!carrera || !distancia) {
+                alert("Llena Carrera y Distancia."); return;
             }
 
-            const hFinal = hipodromo || caballos[caballos.length-1].hipodromo;
-            const cFinal = parseInt(carrera) || caballos[caballos.length-1].carrera;
-            const dFinal = parseInt(distancia) || caballos[caballos.length-1].distanciaHoy;
-
             caballos.push({
-                id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
+                id: Date.now(), hipodromo: hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
                 scratched: false, 
                 nro: '', name: '', notes: '',
                 jockey_name: '', trainer_name: '',
@@ -408,12 +447,11 @@
             const caballosFiltrados = filtro === "TODOS" ? caballos : caballos.filter(c => c.hipodromo === filtro);
             const lastId = caballos.length > 0 ? caballos[caballos.length-1].id : null;
 
-            // Generar opciones para los selects
-            let jockeyOptions = '<option value="">-- Seleccionar --</option>';
-            for (let name in JOCKEYS) jockeyOptions += `<option value="${name}">${name}</option>`;
+            let jockeyOptions = '<option value="">-- Jockey --</option>';
+            for (let name in JOCKEYS_ACTUALES) jockeyOptions += `<option value="${name}">${name}</option>`;
             
-            let trainerOptions = '<option value="">-- Seleccionar --</option>';
-            for (let name in TRAINERS) trainerOptions += `<option value="${name}">${name}</option>`;
+            let trainerOptions = '<option value="">-- Entrenador --</option>';
+            for (let name in TRAINERS_ACTUALES) trainerOptions += `<option value="${name}">${name}</option>`;
 
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
@@ -427,6 +465,10 @@
                     else if (efec < 25) efecColor = "#60a5fa";
                 }
 
+                // Generar selects con el valor seleccionado
+                let jSelect = jockeyOptions.replace(`value="${c.jockey_name}"`, `value="${c.jockey_name}" selected`);
+                let tSelect = trainerOptions.replace(`value="${c.trainer_name}"`, `value="${c.trainer_name}" selected`);
+
                 tr.innerHTML = `
                     <td>
                         <button class="btn-scratch" onclick="toggleRetirado(${c.id})" title="${c.scratched ? 'Restaurar' : 'Retirar'}">
@@ -438,17 +480,8 @@
                     <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <!-- SELECTS DE JINETE Y ENTRENADOR -->
-                    <td>
-                        <select data-id="${c.id}" data-field="jockey_name" onchange="seleccionarJockey(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">
-                            ${jockeyOptions.replace(`value="${c.jockey_name}"`, `value="${c.jockey_name}" selected`)}
-                        </select>
-                    </td>
-                    <td>
-                        <select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">
-                            ${trainerOptions.replace(`value="${c.trainer_name}"`, `value="${c.trainer_name}" selected`)}
-                        </select>
-                    </td>
+                    <td><select data-id="${c.id}" data-field="jockey_name" onchange="seleccionarJockey(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">${jSelect}</select></td>
+                    <td><select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">${tSelect}</select></td>
                     <td><span style="font-weight: bold; color: ${efecColor}; padding: 5px;">${c.efec_equipo || '-'}</span></td>
                     
                     <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
@@ -694,7 +727,6 @@
             
             guardarSilencioso();
             renderTabla(); 
-            alert("¡Cálculos ejecutados! Los Top 10 han sido aplicados.");
         }
 
         function exportarDatos() {
