@@ -71,6 +71,7 @@
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
         .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
         .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; transform: translateY(-1px); }
         
         .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 16px; padding: 5px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
@@ -132,7 +133,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v10.0 - Editor de Estadísticas</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v12.0 - Importador JSON</div>
     </header>
 
     <div class="top-dashboard">
@@ -170,12 +171,15 @@
         ⚠️ <span id="paceAlertText"></span>
     </div>
 
-    <!-- BARRA DE CONTROL PRINCIPAL -->
     <div class="panel">
         <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
             <label style="color: var(--gold); font-weight: bold;">Hipódromo:</label>
             <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 180px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
             <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️ Stats</button>
+            
+            <!-- NUEVO BOTÓN DE IMPORTACIÓN -->
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Importar JSON</button>
+            <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="importarStatsJSON(event)">
         </div>
         
         <div class="group-inputs" style="flex: 2;">
@@ -229,15 +233,14 @@
         </table>
     </div>
 
-    <!-- MODAL DE CONFIGURACIÓN (Oculto por defecto) -->
+    <!-- MODAL DE CONFIGURACIÓN -->
     <div class="modal-overlay" id="modalConfig">
         <div class="modal-content">
             <h2>⚙️ Actualizar Jinetes / Entrenadores</h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Si no tienes el dato de 1-2-3%, déjalo en blanco. El sistema usará solo el Win%.</p>
             
             <div class="form-group">
-                <select id="configHipodromo" onchange="cargarStatsConfig()">
-                    <!-- Se llena dinámicamente -->
-                </select>
+                <select id="configHipodromo" onchange="cargarStatsConfig()"></select>
                 <button onclick="crearHipodromo()" class="btn-primary" style="flex: 0.5;">Nuevo Hipódromo</button>
             </div>
 
@@ -248,20 +251,16 @@
                 </select>
                 <input type="text" id="nombrePersona" placeholder="Nombre exacto">
                 <input type="number" id="porcWin" placeholder="% Win" style="max-width: 90px;">
-                <input type="number" id="porcPlace" placeholder="% 1-2-3" style="max-width: 90px;">
+                <input type="number" id="porcPlace" placeholder="% 1-2-3 (Opc.)" style="max-width: 100px;">
                 <button onclick="guardarPersona()" class="btn-success">Guardar</button>
             </div>
 
-            <div class="config-list" id="listaStats">
-                <!-- Aquí se muestran los jinetes/entrenadores guardados -->
-            </div>
-
+            <div class="config-list" id="listaStats"></div>
             <button onclick="cerrarModalConfig()" class="btn-close">Cerrar y Volver</button>
         </div>
     </div>
 
     <script>
-        // Base de datos inicial por defecto (si el usuario borra la memoria)
         const DB_DEFAULT = {
             "La Rinconada": {
                 jockeys: {
@@ -287,16 +286,48 @@
         let JOCKEYS_ACTUALES = {};
         let TRAINERS_ACTUALES = {};
 
-        function guardarDB() {
-            localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS));
+        function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
+
+        // --- LÓGICA DE IMPORTACIÓN JSON ---
+        function importarStatsJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    // Validar estructura básica
+                    if (data.jockeys || data.trainers) {
+                        const nombreHipo = prompt("¿A qué hipódromo pertenecen estas estadísticas?", "La Rinconada");
+                        if (nombreHipo) {
+                            if (!DB_HIPODROMOS[nombreHipo]) DB_HIPODROMOS[nombreHipo] = { jockeys: {}, trainers: {} };
+                            
+                            // Si el JSON viene estructurado como { "jockeys": {...}, "trainers": {...} }
+                            if (data.jockeys) Object.assign(DB_HIPODROMOS[nombreHipo].jockeys, data.jockeys);
+                            if (data.trainers) Object.assign(DB_HIPODROMOS[nombreHipo].trainers, data.trainers);
+                            
+                            guardarDB();
+                            initHipodromos();
+                            document.getElementById('hipodromoActivo').value = nombreHipo;
+                            cambiarHipodromo();
+                            alert(`¡Estadísticas cargadas exitosamente para ${nombreHipo}!`);
+                        }
+                    } else {
+                        alert("El archivo JSON no tiene el formato correcto. Debe contener 'jockeys' y/o 'trainers'.");
+                    }
+                } catch (error) {
+                    alert("Error al leer el archivo JSON. Verifica que sea un archivo válido.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Limpiar input
         }
 
         function initHipodromos() {
             const selectActivo = document.getElementById('hipodromoActivo');
             const selectConfig = document.getElementById('configHipodromo');
-            
-            selectActivo.innerHTML = '';
-            selectConfig.innerHTML = '';
+            selectActivo.innerHTML = ''; selectConfig.innerHTML = '';
             
             for (let hipo in DB_HIPODROMOS) {
                 selectActivo.innerHTML += `<option value="${hipo}">${hipo}</option>`;
@@ -311,13 +342,12 @@
                 JOCKEYS_ACTUALES = DB_HIPODROMOS[hipo].jockeys;
                 TRAINERS_ACTUALES = DB_HIPODROMOS[hipo].trainers;
             } else {
-                JOCKEYS_ACTUALES = {};
-                TRAINERS_ACTUALES = {};
+                JOCKEYS_ACTUALES = {}; TRAINERS_ACTUALES = {};
             }
             renderTabla(); 
         }
 
-        // --- LÓGICA DEL MODAL DE CONFIGURACIÓN ---
+        // --- LÓGICA DEL MODAL ---
         function abrirModalConfig() {
             document.getElementById('modalConfig').style.display = 'flex';
             document.getElementById('configHipodromo').value = document.getElementById('hipodromoActivo').value;
@@ -326,21 +356,18 @@
 
         function cerrarModalConfig() {
             document.getElementById('modalConfig').style.display = 'none';
-            initHipodromos(); // Refrescar en caso de nuevos hipódromos
+            initHipodromos();
         }
 
         function crearHipodromo() {
-            const nombre = prompt("Nombre del nuevo Hipódromo (Ej: Santa Anita):");
+            const nombre = prompt("Nombre del nuevo Hipódromo:");
             if (nombre && nombre.trim() !== '') {
                 if (!DB_HIPODROMOS[nombre]) {
                     DB_HIPODROMOS[nombre] = { jockeys: {}, trainers: {} };
-                    guardarDB();
-                    initHipodromos();
+                    guardarDB(); initHipodromos();
                     document.getElementById('configHipodromo').value = nombre;
                     cargarStatsConfig();
-                } else {
-                    alert("Ese hipódromo ya existe.");
-                }
+                } else { alert("Ese hipódromo ya existe."); }
             }
         }
 
@@ -348,11 +375,19 @@
             const hipo = document.getElementById('configHipodromo').value;
             const tipo = document.getElementById('tipoPersona').value;
             const nombre = document.getElementById('nombrePersona').value.trim();
-            const win = parseFloat(document.getElementById('porcWin').value);
-            const place = parseFloat(document.getElementById('porcPlace').value);
+            const winVal = document.getElementById('porcWin').value;
+            const placeVal = document.getElementById('porcPlace').value;
 
-            if (!nombre || isNaN(win) || isNaN(place)) {
-                alert("Por favor llena todos los campos (Nombre, Win%, 1-2-3%).");
+            if (!nombre || winVal === '') {
+                alert("El Nombre y el % Win son obligatorios.");
+                return;
+            }
+
+            const win = parseFloat(winVal);
+            const place = placeVal !== '' ? parseFloat(placeVal) : null;
+
+            if (isNaN(win) || (place !== null && isNaN(place))) {
+                alert("Los porcentajes deben ser números válidos.");
                 return;
             }
 
@@ -376,8 +411,7 @@
             if (confirm(`¿Eliminar a ${nombre}?`)) {
                 if (tipo === 'jockey') delete DB_HIPODROMOS[hipo].jockeys[nombre];
                 else delete DB_HIPODROMOS[hipo].trainers[nombre];
-                guardarDB();
-                cargarStatsConfig();
+                guardarDB(); cargarStatsConfig();
             }
         }
 
@@ -392,10 +426,12 @@
             const trainers = DB_HIPODROMOS[hipo].trainers;
 
             for (let j in jockeys) {
-                lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> (Jockey) - ${jockeys[j].win}% / ${jockeys[j].place}%</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D';
+                lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> (Jockey) - Win: ${jockeys[j].win}% | 1-2-3: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
             }
             for (let t in trainers) {
-                lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> (Entrenador) - ${trainers[t].win}% / ${trainers[t].place}%</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D';
+                lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> (Entrenador) - Win: ${trainers[t].win}% | 1-2-3: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
             }
         }
 
@@ -424,9 +460,7 @@
             return parseFloat(valor);
         }
 
-        function guardarSilencioso() {
-            localStorage.setItem('caballosHipicosElite', JSON.stringify(caballos));
-        }
+        function guardarSilencioso() { localStorage.setItem('caballosHipicosElite', JSON.stringify(caballos)); }
 
         function actualizarDato(id, campo, valor) {
             const caballo = caballos.find(c => c.id === id);
@@ -439,7 +473,7 @@
                 caballo.jockey_name = nombre;
                 if (JOCKEYS_ACTUALES[nombre]) {
                     caballo.j_win = JOCKEYS_ACTUALES[nombre].win;
-                    caballo.j_place = JOCKEYS_ACTUALES[nombre].place;
+                    caballo.j_place = JOCKEYS_ACTUALES[nombre].place !== null ? JOCKEYS_ACTUALES[nombre].place : '';
                 } else {
                     caballo.j_win = ''; caballo.j_place = '';
                 }
@@ -453,7 +487,7 @@
                 caballo.trainer_name = nombre;
                 if (TRAINERS_ACTUALES[nombre]) {
                     caballo.t_win = TRAINERS_ACTUALES[nombre].win;
-                    caballo.t_place = TRAINERS_ACTUALES[nombre].place;
+                    caballo.t_place = TRAINERS_ACTUALES[nombre].place !== null ? TRAINERS_ACTUALES[nombre].place : '';
                 } else {
                     caballo.t_win = ''; caballo.t_place = '';
                 }
@@ -475,11 +509,9 @@
 
             caballos.push({
                 id: Date.now(), hipodromo: hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
-                scratched: false, 
-                nro: '', name: '', notes: '', jockey_name: '', trainer_name: '',
+                scratched: false, nro: '', name: '', notes: '', jockey_name: '', trainer_name: '',
                 j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
-                t1: '', t2: '', t3: '', t4: '', t5: '',
-                d1: '', d2: '', d3: '', d4: '', d5: '',
+                t1: '', t2: '', t3: '', t4: '', t5: '', d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
@@ -635,24 +667,18 @@
             const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
             
             if (caballosFiltrados.length === 0) {
-                panel.style.display = 'none';
-                ticketPanel.style.display = 'none';
-                paceAlert.style.display = 'none';
+                panel.style.display = 'none'; ticketPanel.style.display = 'none'; paceAlert.style.display = 'none';
                 return;
             }
 
-            panel.style.display = 'flex';
-            ticketPanel.style.display = 'flex';
+            panel.style.display = 'flex'; ticketPanel.style.display = 'flex';
 
             const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera;
             const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
             
             const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-" && !c.scratched).sort((a,b) => a.ranking - b.ranking);
             
-            const p1 = topCarrera[0];
-            const p2 = topCarrera[1];
-            const p3 = topCarrera[2];
-            const p4 = topCarrera[3];
+            const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
 
             const getHorseName = (h) => h ? `<span style="font-size:20px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:12px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
 
@@ -678,29 +704,21 @@
                 document.getElementById('tkTrifecta').innerText = p3 ? `${p1.nro} - ${p2.nro} - ${p3.nro}` : 'Faltan datos';
                 document.getElementById('tkPool').innerText = p4 ? `${p1.nro}, ${p2.nro}, ${p3.nro}, ${p4.nro}` : `${p1.nro}, ${p2.nro}, ${p3.nro}`;
             } else {
-                document.getElementById('tkWin').innerText = '-';
-                document.getElementById('tkExacta').innerText = '-';
-                document.getElementById('tkTrifecta').innerText = '-';
-                document.getElementById('tkPool').innerText = '-';
+                document.getElementById('tkWin').innerText = '-'; document.getElementById('tkExacta').innerText = '-';
+                document.getElementById('tkTrifecta').innerText = '-'; document.getElementById('tkPool').innerText = '-';
             }
 
             const earlyHorses = topCarrera.filter(c => (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5);
             
             if (earlyHorses.length >= 3) {
-                paceAlert.style.display = 'flex';
-                paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
-                paceAlert.style.borderColor = 'var(--danger)';
-                paceAlert.style.color = '#fca5a5';
+                paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
+                paceAlert.style.borderColor = 'var(--danger)'; paceAlert.style.color = '#fca5a5';
                 document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida. Se van a quemar peleando la punta. Favorece a los ejemplares con estilo "S".`;
             } else if (earlyHorses.length === 1 && topCarrera.length > 3) {
-                paceAlert.style.display = 'flex';
-                paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
-                paceAlert.style.borderColor = 'var(--success)';
-                paceAlert.style.color = '#6ee7b7';
+                paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                paceAlert.style.borderColor = 'var(--success)'; paceAlert.style.color = '#6ee7b7';
                 document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse y "robarse" la carrera.`;
-            } else {
-                paceAlert.style.display = 'none';
-            }
+            } else { paceAlert.style.display = 'none'; }
         }
 
         function copiarTicket() {
@@ -709,18 +727,13 @@
             const trifecta = document.getElementById('tkTrifecta').innerText;
             const pool = document.getElementById('tkPool').innerText;
 
-            if (win === '-') {
-                alert("Primero debes ejecutar los cálculos mágicos para generar un ticket.");
-                return;
-            }
+            if (win === '-') { alert("Primero ejecuta los cálculos mágicos."); return; }
 
             const texto = `🏇 *MI JUGADA HÍPICA*\n\n🏆 Ganador: ${win}\n🥈 Exacta: ${exacta}\n🥉 Trifecta: ${trifecta}\n💰 Pool: ${pool}\n\n_Creado con Sistema Hípico PRO_`;
 
             navigator.clipboard.writeText(texto).then(() => {
-                alert("¡Jugada copiada al portapapeles! Lista para pegar en WhatsApp.");
-            }).catch(err => {
-                alert("Error al copiar. Tu navegador no soporta esta función.");
-            });
+                alert("¡Jugada copiada al portapapeles!");
+            }).catch(err => { alert("Error al copiar."); });
         }
 
         function calcularTodo() {
@@ -757,27 +770,42 @@
                 const tWin = parseFloat(c.t_win);
                 const tPlace = parseFloat(c.t_place);
                 
-                let avgWin = 0, avgPlace = 0, hasEfec = false;
+                let avgWin = NaN, avgPlace = NaN;
+                let hasWin = false, hasPlace = false;
 
-                if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin) / 2; hasEfec = true; }
-                else if (!isNaN(jWin)) { avgWin = jWin; hasEfec = true; }
-                else if (!isNaN(tWin)) { avgWin = tWin; hasEfec = true; }
+                if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin) / 2; hasWin = true; }
+                else if (!isNaN(jWin)) { avgWin = jWin; hasWin = true; }
+                else if (!isNaN(tWin)) { avgWin = tWin; hasWin = true; }
 
-                if (!isNaN(jPlace) && !isNaN(tPlace)) { avgPlace = (jPlace + tPlace) / 2; hasEfec = true; }
-                else if (!isNaN(jPlace)) { avgPlace = jPlace; hasEfec = true; }
-                else if (!isNaN(tPlace)) { avgPlace = tPlace; hasEfec = true; }
+                if (!isNaN(jPlace) && !isNaN(tPlace)) { avgPlace = (jPlace + tPlace) / 2; hasPlace = true; }
+                else if (!isNaN(jPlace)) { avgPlace = jPlace; hasPlace = true; }
+                else if (!isNaN(tPlace)) { avgPlace = tPlace; hasPlace = true; }
 
-                if (hasEfec) {
-                    const indice = (avgWin + avgPlace) / 2;
-                    c.efec_equipo = indice.toFixed(1);
+                if (hasWin || hasPlace) {
+                    let indiceVisual = 0;
+                    if (hasWin && hasPlace) {
+                        indiceVisual = (avgWin + avgPlace) / 2;
+                        c.efec_equipo = indiceVisual.toFixed(1);
+                        ajuste += ((15 - avgWin) * 0.02) + ((40 - avgPlace) * 0.01);
+                    } else if (hasWin) {
+                        c.efec_equipo = avgWin.toFixed(1) + " (W)";
+                        ajuste += ((15 - avgWin) * 0.02);
+                    } else if (hasPlace) {
+                        c.efec_equipo = avgPlace.toFixed(1) + " (P)";
+                        ajuste += ((40 - avgPlace) * 0.01);
+                    }
 
-                    const ajusteWin = (15 - avgWin) * 0.02;
-                    const ajustePlace = (40 - avgPlace) * 0.01;
-                    
-                    ajuste += (ajusteWin + ajustePlace);
+                    if (hasWin && hasPlace) {
+                        if (avgWin >= 20 && avgPlace >= 45) c.alerta = "EQUIPO ELITE";
+                        else if (avgWin < 10 && avgPlace < 30) c.alerta = "EQUIPO FRIO";
+                    } else if (hasWin) {
+                        if (avgWin >= 20) c.alerta = "EQUIPO ELITE";
+                        else if (avgWin < 10) c.alerta = "EQUIPO FRIO";
+                    } else if (hasPlace) {
+                        if (avgPlace >= 45) c.alerta = "EQUIPO ELITE";
+                        else if (avgPlace < 30) c.alerta = "EQUIPO FRIO";
+                    }
 
-                    if (avgWin >= 20 && avgPlace >= 45) c.alerta = "EQUIPO ELITE";
-                    else if (avgWin < 10 && avgPlace < 30) c.alerta = "EQUIPO FRIO";
                 } else {
                     c.efec_equipo = "-";
                 }
@@ -818,15 +846,13 @@
                 if(c.tpAjustado === "Sin Datos" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
             });
             
-            guardarSilencioso();
-            renderTabla(); 
+            guardarSilencioso(); renderTabla(); 
         }
 
         function exportarDatos() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(caballos));
             const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", "respaldo_hipico_" + new Date().toISOString().slice(0,10) + ".json");
+            a.setAttribute("href", dataStr); a.setAttribute("download", "respaldo_hipico_" + new Date().toISOString().slice(0,10) + ".json");
             document.body.appendChild(a); a.click(); a.remove();
         }
 
@@ -856,7 +882,6 @@
             document.body.appendChild(link); link.click(); link.remove();
         }
 
-        // Inicializar todo
         initHipodromos();
         actualizarFiltro();
         renderTabla();
