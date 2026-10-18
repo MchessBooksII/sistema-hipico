@@ -9,7 +9,7 @@
             --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
             --text-muted: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --border: #334155; --valor: #c084fc;
+            --border: #334155; --valor: #c084fc; --gold: #fbbf24;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,38 +22,43 @@
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
         h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Panel de Podio */
+        /* Paneles Superiores (Podio + Ticket) */
+        .top-dashboard { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        
         .podium-panel {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            flex: 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border); border-radius: 10px; padding: 15px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); display: none; flex-direction: column; justify-content: center;
         }
-        .podium-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .podium-horse { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .podium-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 100px;}
+        .podium-horse { font-size: 16px; font-weight: 700; flex: 1; }
         .pos-1 { color: var(--success); }
         .pos-2 { color: var(--warning); }
         .pos-3 { color: #f97316; }
+        
+        .bar-container { flex: 2; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-left: 15px;}
+        .bar-fill { height: 100%; transition: width 0.5s; }
+        .bar-1 { background: var(--success); width: 100%; }
+        .bar-2 { background: var(--warning); }
+        .bar-3 { background: #f97316; }
 
+        .ticket-panel {
+            flex: 1; background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent);
+            border-radius: 10px; padding: 15px; display: none; flex-direction: column; justify-content: center;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .ticket-panel h3 { color: #60a5fa; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 5px; }
+        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+        .ticket-line span:last-child { font-weight: bold; color: var(--gold); }
+        
         .pace-alert {
-            background-color: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--danger);
-            color: #fca5a5;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            display: none; /* Oculto por defecto */
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5;
+            padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 13px;
+            display: none; align-items: center; gap: 10px; margin-bottom: 15px;
         }
 
+        /* Controles y Tabla */
         .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .group-inputs { display: flex; gap: 10px; flex: 1; }
 
@@ -65,6 +70,9 @@
         .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
         .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
+        
+        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 16px; padding: 5px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
+        .btn-scratch:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
 
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 65vh; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; white-space: nowrap; }
@@ -73,11 +81,13 @@
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
         /* Sticky Columns */
-        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(2), td:nth-child(2) { position: sticky; left: 80px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(3), td:nth-child(3) { position: sticky; left: 130px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(4), td:nth-child(4) { position: sticky; left: 180px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
-        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3), tr:hover td:nth-child(4) { background-color: #26334d; }
+        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); width: 40px;}
+        th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(3), td:nth-child(3) { position: sticky; left: 120px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(4), td:nth-child(4) { position: sticky; left: 170px; z-index: 5; background-color: var(--panel-bg); }
+        th:nth-child(5), td:nth-child(5) { position: sticky; left: 220px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
+        
+        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3), tr:hover td:nth-child(4), tr:hover td:nth-child(5) { background-color: #26334d; }
 
         td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 14px;}
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
@@ -95,6 +105,11 @@
         .text-destacado { font-weight: 700; color: white; padding: 5px;}
         .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
         
+        /* Estilo para caballos retirados */
+        .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
+        .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
+        .row-scratched td span { text-decoration: line-through; color: #ef4444; }
+        
         @keyframes highlight { from { background-color: rgba(59, 130, 246, 0.4); } to { background-color: transparent; } }
         .new-row { animation: highlight 1s ease-out; }
     </style>
@@ -103,28 +118,41 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v3.0 - Dashboard Élite</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v4.1 - Control de Retiros</div>
     </header>
 
-    <!-- PANEL DE PODIO (GANADORES) -->
-    <div class="podium-panel" id="podiumPanel" style="display: none;">
-        <div>
-            <div class="podium-title">🏆 1er Lugar (Ganador)</div>
-            <div class="podium-horse pos-1" id="podio1">-</div>
+    <!-- DASHBOARD SUPERIOR (Podio + Ticket) -->
+    <div class="top-dashboard">
+        <div class="podium-panel" id="podiumPanel">
+            <div class="podium-row">
+                <div class="podium-title">🏆 1er Lugar</div>
+                <div class="podium-horse pos-1" id="podio1">-</div>
+                <div class="bar-container"><div class="bar-fill bar-1" id="bar1"></div></div>
+            </div>
+            <div class="podium-row">
+                <div class="podium-title">🥈 2do Lugar</div>
+                <div class="podium-horse pos-2" id="podio2">-</div>
+                <div class="bar-container"><div class="bar-fill bar-2" id="bar2"></div></div>
+            </div>
+            <div class="podium-row">
+                <div class="podium-title">🥉 3er Lugar</div>
+                <div class="podium-horse pos-3" id="podio3">-</div>
+                <div class="bar-container"><div class="bar-fill bar-3" id="bar3"></div></div>
+            </div>
         </div>
-        <div>
-            <div class="podium-title">🥈 2do Lugar</div>
-            <div class="podium-horse pos-2" id="podio2">-</div>
-        </div>
-        <div>
-            <div class="podium-title">🥉 3er Lugar</div>
-            <div class="podium-horse pos-3" id="podio3">-</div>
+
+        <div class="ticket-panel" id="ticketPanel">
+            <h3>🎫 Jugada Sugerida</h3>
+            <div class="ticket-line"><span>Ganador:</span> <span id="tkWin">-</span></div>
+            <div class="ticket-line"><span>Exacta:</span> <span id="tkExacta">-</span></div>
+            <div class="ticket-line"><span>Trifecta:</span> <span id="tkTrifecta">-</span></div>
+            <div class="ticket-line"><span>Pool de 4:</span> <span id="tkPool">-</span></div>
         </div>
     </div>
 
     <!-- ALERTA DE RITMO -->
     <div class="pace-alert" id="paceAlert">
-        ⚠️ <span id="paceAlertText">Alerta: Múltiples caballos con estilo "E" pelearán la punta. Favorece a los "S".</span>
+        ⚠️ <span id="paceAlertText"></span>
     </div>
 
     <div class="panel">
@@ -160,10 +188,12 @@
         <table>
             <thead>
                 <tr>
+                    <th>🚫</th> <!-- Botón de Retiro -->
                     <th style="width: 80px;">Hipódromo</th>
                     <th style="width: 50px;">Carr.</th>
                     <th style="width: 50px;">Nro</th>
                     <th style="width: 120px;">Ejemplar</th>
+                    <th>Jockey</th><th>Entrenador</th>
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Puesto</th><th>Kilos</th>
@@ -172,6 +202,7 @@
                     <th style="color: #c084fc;">TP Ajust.</th>
                     <th>Ranking</th><th>Dif</th><th>Est</th>
                     <th style="color: var(--success);">Alerta</th>
+                    <th>Notas</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla"></tbody>
@@ -217,6 +248,16 @@
             }
         }
 
+        // Función Mágica para Retirar / Restaurar
+        function toggleRetirado(id) {
+            const caballo = caballos.find(c => c.id === id);
+            if(caballo) {
+                caballo.scratched = !caballo.scratched; // Cambia el estado
+                guardarSilencioso();
+                calcularTodo(); // Recalcula TODO automáticamente
+            }
+        }
+
         function agregarCaballo(focusAuto = false) {
             const hipodromo = document.getElementById('hipodromo').value.trim();
             const carrera = document.getElementById('carrera').value;
@@ -232,7 +273,9 @@
 
             caballos.push({
                 id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
-                nro: '', name: '', t1: '', t2: '', t3: '', t4: '', t5: '',
+                scratched: false, // Nuevo atributo
+                nro: '', name: '', jockey: '', trainer: '', notes: '',
+                t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
@@ -245,7 +288,7 @@
                 setTimeout(() => {
                     const rows = document.querySelectorAll('#cuerpoTabla tr');
                     if (rows.length > 0) {
-                        const firstInput = rows[rows.length - 1].querySelector('input');
+                        const firstInput = rows[rows.length - 1].querySelector('input[data-field="nro"]');
                         if (firstInput) { firstInput.focus(); firstInput.select(); }
                     }
                 }, 50);
@@ -263,7 +306,7 @@
         }
 
         function handleKeyDown(e) {
-            const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input, #cuerpoTabla select'));
+            const inputs = Array.from(document.querySelectorAll('#cuerpoTabla input:not(.input-scratch), #cuerpoTabla select'));
             const isLastInput = (e.target === inputs[inputs.length - 1]);
 
             if (e.key === 'Tab' && !e.shiftKey && isLastInput) {
@@ -301,31 +344,39 @@
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 if (animarUltimaFila && c.id === lastId) tr.classList.add('new-row');
+                if (c.scratched) tr.classList.add('row-scratched'); // Clase visual si está retirado
                 
                 tr.innerHTML = `
+                    <td>
+                        <button class="btn-scratch" onclick="toggleRetirado(${c.id})" title="${c.scratched ? 'Restaurar' : 'Retirar'}">
+                            ${c.scratched ? '♻️' : '🚫'}
+                        </button>
+                    </td>
                     <td><span style="font-weight: 600; color: #94a3b8;">${c.hipodromo}</span></td>
                     <td>${c.carrera}</td>
-                    <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)"></td>
-                    <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)">
+                    <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="jockey" value="${c.jockey || ''}" placeholder="Jockey" onchange="actualizarDato(${c.id}, 'jockey', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="trainer" value="${c.trainer || ''}" placeholder="Entren." onchange="actualizarDato(${c.id}, 'trainer', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}>
                         <option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option>
                         <option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option>
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
-                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8"></td>
-                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="Ej: 8/5" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)"></td>
+                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="Ej: 8/5" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
                     <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
@@ -339,60 +390,93 @@
                         ${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">🔥 VALOR</span>' : 
                           c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>' : ''}
                     </td>
+                    <td><input type="text" data-id="${c.id}" data-field="notes" value="${c.notes || ''}" placeholder="Nota..." onchange="actualizarDato(${c.id}, 'notes', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            if (activeId && activeField) {
+            if (activeId && activeField && !caballos.find(c => c.id == activeId).scratched) {
                 const inputToFocus = document.querySelector(`input[data-id="${activeId}"][data-field="${activeField}"], select[data-id="${activeId}"][data-field="${activeField}"]`);
                 if (inputToFocus) inputToFocus.focus();
             }
 
-            actualizarPodio();
+            actualizarDashboard();
         }
 
-        function actualizarPodio() {
+        function actualizarDashboard() {
             const filtro = document.getElementById('filtroHipodromo').value;
             const panel = document.getElementById('podiumPanel');
+            const ticketPanel = document.getElementById('ticketPanel');
             const paceAlert = document.getElementById('paceAlert');
             
-            // Si no hay datos calculados, ocultar
-            const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "");
+            // FILTRO CRÍTICO: Ignorar los caballos retirados
+            const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
             
             if (caballosFiltrados.length === 0) {
                 panel.style.display = 'none';
+                ticketPanel.style.display = 'none';
                 paceAlert.style.display = 'none';
                 return;
             }
 
             panel.style.display = 'flex';
+            ticketPanel.style.display = 'flex';
 
-            // Obtener Top 3 de la última carrera seleccionada/filtrada
             const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera;
             const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
             
-            const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-");
+            // FILTRO CRÍTICO EN EL PODIO
+            const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-" && !c.scratched).sort((a,b) => a.ranking - b.ranking);
             
-            const p1 = topCarrera.find(c => c.ranking === 1);
-            const p2 = topCarrera.find(c => c.ranking === 2);
-            const p3 = topCarrera.find(c => c.ranking === 3);
+            const p1 = topCarrera[0];
+            const p2 = topCarrera[1];
+            const p3 = topCarrera[2];
+            const p4 = topCarrera[3];
 
-            document.getElementById('podio1').innerHTML = p1 ? `<span style="font-size:20px;">#${p1.nro}</span> ${p1.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p1.tpAjustado})</span>` : '-';
-            document.getElementById('podio2').innerHTML = p2 ? `<span style="font-size:20px;">#${p2.nro}</span> ${p2.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p2.tpAjustado})</span>` : '-';
-            document.getElementById('podio3').innerHTML = p3 ? `<span style="font-size:20px;">#${p3.nro}</span> ${p3.name || 'Sin Nombre'} <span style="font-size:12px; color:#94a3b8;">(${p3.tpAjustado})</span>` : '-';
+            const getHorseName = (h) => h ? `<span style="font-size:20px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:12px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
 
-            // Lógica de Pace Scenario
+            document.getElementById('podio1').innerHTML = getHorseName(p1);
+            document.getElementById('podio2').innerHTML = getHorseName(p2);
+            document.getElementById('podio3').innerHTML = getHorseName(p3);
+
+            if (p1) {
+                document.getElementById('bar1').style.width = '100%';
+                if (p2) {
+                    const diff2 = parseFloat(p2.tpAjustado) - parseFloat(p1.tpAjustado);
+                    document.getElementById('bar2').style.width = `${Math.max(10, 100 - (diff2 * 20))}%`;
+                }
+                if (p3) {
+                    const diff3 = parseFloat(p3.tpAjustado) - parseFloat(p1.tpAjustado);
+                    document.getElementById('bar3').style.width = `${Math.max(5, 100 - (diff3 * 20))}%`;
+                }
+            }
+
+            if (p1 && p2) {
+                document.getElementById('tkWin').innerText = `#${p1.nro}`;
+                document.getElementById('tkExacta').innerText = `${p1.nro} con ${p2.nro}`;
+                document.getElementById('tkTrifecta').innerText = p3 ? `${p1.nro} - ${p2.nro} - ${p3.nro}` : 'Faltan datos';
+                document.getElementById('tkPool').innerText = p4 ? `${p1.nro}, ${p2.nro}, ${p3.nro}, ${p4.nro}` : `${p1.nro}, ${p2.nro}, ${p3.nro}`;
+            } else {
+                document.getElementById('tkWin').innerText = '-';
+                document.getElementById('tkExacta').innerText = '-';
+                document.getElementById('tkTrifecta').innerText = '-';
+                document.getElementById('tkPool').innerText = '-';
+            }
+
             const earlyHorses = topCarrera.filter(c => (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5);
             
             if (earlyHorses.length >= 3) {
                 paceAlert.style.display = 'flex';
-                document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida (E o E/P). Se van a quemar peleando la punta. Favorece a los ejemplares con estilo "S" (Sustained).`;
+                paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
+                paceAlert.style.borderColor = 'var(--danger)';
+                paceAlert.style.color = '#fca5a5';
+                document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida. Se van a quemar peleando la punta. Favorece a los ejemplares con estilo "S".`;
             } else if (earlyHorses.length === 1 && topCarrera.length > 3) {
                 paceAlert.style.display = 'flex';
                 paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
                 paceAlert.style.borderColor = 'var(--success)';
                 paceAlert.style.color = '#6ee7b7';
-                document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse y "robarse" la carrera de punta a punta.`;
+                document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse y "robarse" la carrera.`;
             } else {
                 paceAlert.style.display = 'none';
             }
@@ -402,6 +486,18 @@
             if(caballos.length === 0) return;
 
             caballos.forEach(c => {
+                // Si está retirado, saltamos el cálculo y limpiamos sus resultados
+                if (c.scratched) {
+                    c.tpReal = "Retirado";
+                    c.ajuste = "-";
+                    c.tpAjustado = "Retirado";
+                    c.ranking = "-";
+                    c.dif = "-";
+                    c.est = "-";
+                    c.alerta = "";
+                    return;
+                }
+
                 const tiempos = [parseTiempo(c.t1), parseTiempo(c.t2), parseTiempo(c.t3), parseTiempo(c.t4), parseTiempo(c.t5)];
                 const distancias = [parseFloat(c.d1), parseFloat(c.d2), parseFloat(c.d3), parseFloat(c.d4), parseFloat(c.d5)];
                 
@@ -428,7 +524,8 @@
             const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
             
             carrerasUnicas.forEach(clave => {
-                let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "Sin Datos");
+                // FILTRO CRÍTICO EN EL RANKING: Ignorar retirados
+                let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "Sin Datos" && !c.scratched);
                 if(lista.length === 0) return;
 
                 lista.sort((a,b) => parseFloat(a.tpAjustado) - parseFloat(b.tpAjustado));
@@ -448,12 +545,11 @@
             });
 
             caballos.forEach(c => {
-                if(c.tpAjustado === "Sin Datos") { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
+                if(c.tpAjustado === "Sin Datos" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
             });
             
             guardarSilencioso();
             renderTabla(); 
-            alert("¡Cálculos ejecutados! Revisa el Podio y las Alertas de Ritmo.");
         }
 
         function exportarDatos() {
@@ -481,8 +577,8 @@
 
         function exportarCSV() {
             if(caballos.length === 0) return alert("No hay datos.");
-            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine"];
-            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml].join(","));
+            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jockey", "Entrenador", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
+            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey, c.trainer, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
