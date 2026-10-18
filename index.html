@@ -22,7 +22,6 @@
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
         h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Paneles Superiores (Podio + Ticket) */
         .top-dashboard { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
         
         .podium-panel {
@@ -60,7 +59,6 @@
             display: none; align-items: center; gap: 10px; margin-bottom: 15px;
         }
 
-        /* Controles y Tabla */
         .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .group-inputs { display: flex; gap: 10px; flex: 1; }
 
@@ -102,12 +100,13 @@
         .val-alerta { display: inline-block; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; margin: 5px; }
         .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
         .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .alerta-equipo-frio { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #60a5fa; }
+        .alerta-equipo-caliente { background-color: rgba(251, 191, 36, 0.2); color: var(--gold); border: 1px solid var(--gold); }
 
         .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 12px; }
         .text-destacado { font-weight: 700; color: white; padding: 5px;}
         .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
         
-        /* Estilo para caballos retirados */
         .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
         .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
         .row-scratched td span { text-decoration: line-through; color: #ef4444; }
@@ -120,10 +119,9 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v5.0 - Gestión de Jugadas</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v6.1 - Factor Humano Integrado</div>
     </header>
 
-    <!-- DASHBOARD SUPERIOR (Podio + Ticket) -->
     <div class="top-dashboard">
         <div class="podium-panel" id="podiumPanel">
             <div class="podium-row">
@@ -143,7 +141,6 @@
             </div>
         </div>
 
-        <!-- PANEL DEL TICKET (Aquí está el generador) -->
         <div class="ticket-panel" id="ticketPanel">
             <div>
                 <h3>🎫 Jugada Sugerida</h3>
@@ -156,7 +153,6 @@
         </div>
     </div>
 
-    <!-- ALERTA DE RITMO -->
     <div class="pace-alert" id="paceAlert">
         ⚠️ <span id="paceAlertText"></span>
     </div>
@@ -179,8 +175,7 @@
 
     <div class="panel" style="justify-content: space-between;">
         <div style="display: flex; gap: 10px;">
-            <!-- Botón que activa el Ticket Generator -->
-            <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos (Generar Ticket)</button>
+            <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos</button>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="exportarCSV()" class="btn-outline">📊 Exportar</button>
@@ -195,12 +190,16 @@
         <table>
             <thead>
                 <tr>
-                    <th>🚫</th> <!-- Botón de Retiro -->
+                    <th>🚫</th>
                     <th style="width: 80px;">Hipódromo</th>
                     <th style="width: 50px;">Carr.</th>
                     <th style="width: 50px;">Nro</th>
                     <th style="width: 120px;">Ejemplar</th>
-                    <th>Jockey</th><th>Entrenador</th>
+                    <!-- NUEVAS COLUMNAS DE EFECTIVIDAD -->
+                    <th style="color: #60a5fa;">Jockey %</th>
+                    <th style="color: #10b981;">Entren. %</th>
+                    <th style="color: var(--gold);">Efec. Equipo</th>
+                    
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Puesto</th><th>Kilos</th>
@@ -280,7 +279,7 @@
             caballos.push({
                 id: Date.now(), hipodromo: hFinal, carrera: cFinal, distanciaHoy: dFinal,
                 scratched: false, 
-                nro: '', name: '', jockey: '', trainer: '', notes: '',
+                nro: '', name: '', jockey_pct: '', trainer_pct: '', efec_equipo: '', notes: '',
                 t1: '', t2: '', t3: '', t4: '', t5: '',
                 d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
@@ -352,6 +351,14 @@
                 if (animarUltimaFila && c.id === lastId) tr.classList.add('new-row');
                 if (c.scratched) tr.classList.add('row-scratched'); 
                 
+                // Color dinámico para el porcentaje de efectividad
+                let efecColor = "#94a3b8";
+                if (c.efec_equipo !== "" && c.efec_equipo !== "-") {
+                    const efec = parseFloat(c.efec_equipo);
+                    if (efec >= 20) efecColor = "var(--gold)";
+                    else if (efec < 10) efecColor = "#60a5fa";
+                }
+
                 tr.innerHTML = `
                     <td>
                         <button class="btn-scratch" onclick="toggleRetirado(${c.id})" title="${c.scratched ? 'Restaurar' : 'Retirar'}">
@@ -362,8 +369,12 @@
                     <td>${c.carrera}</td>
                     <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="jockey" value="${c.jockey || ''}" placeholder="Jockey" onchange="actualizarDato(${c.id}, 'jockey', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="trainer" value="${c.trainer || ''}" placeholder="Entren." onchange="actualizarDato(${c.id}, 'trainer', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    
+                    <!-- INPUTS DE EFECTIVIDAD -->
+                    <td><input type="number" step="0.01" data-id="${c.id}" data-field="jockey_pct" value="${c.jockey_pct || ''}" placeholder="Ej: 15.5" onchange="actualizarDato(${c.id}, 'jockey_pct', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" step="0.01" data-id="${c.id}" data-field="trainer_pct" value="${c.trainer_pct || ''}" placeholder="Ej: 12.2" onchange="actualizarDato(${c.id}, 'trainer_pct', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><span style="font-weight: bold; color: ${efecColor}; padding: 5px;">${c.efec_equipo || '-'}</span></td>
+                    
                     <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
@@ -394,7 +405,9 @@
                     
                     <td>
                         ${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">🔥 VALOR</span>' : 
-                          c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>' : ''}
+                          c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>' : 
+                          c.alerta === 'EQUIPO CALIENTE' ? '<span class="val-alerta alerta-equipo-caliente">🔥 EQUIPO TOP</span>' : 
+                          c.alerta === 'EQUIPO FRIO' ? '<span class="val-alerta alerta-equipo-frio">🧊 EQUIPO FRÍO</span>' : ''}
                     </td>
                     <td><input type="text" data-id="${c.id}" data-field="notes" value="${c.notes || ''}" placeholder="Nota..." onchange="actualizarDato(${c.id}, 'notes', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
                 `;
@@ -425,7 +438,7 @@
             }
 
             panel.style.display = 'flex';
-            ticketPanel.style.display = 'flex'; // AQUÍ SE MUESTRA EL TICKET
+            ticketPanel.style.display = 'flex';
 
             const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera;
             const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
@@ -486,7 +499,6 @@
             }
         }
 
-        // NUEVA FUNCIÓN PARA COPIAR EL TICKET
         function copiarTicket() {
             const win = document.getElementById('tkWin').innerText;
             const exacta = document.getElementById('tkExacta').innerText;
@@ -519,6 +531,7 @@
                     c.dif = "-";
                     c.est = "-";
                     c.alerta = "";
+                    c.efec_equipo = "-";
                     return;
                 }
 
@@ -532,6 +545,7 @@
 
                 c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "Sin Datos";
 
+                // 1. Ajuste por Kilos y Puesto
                 let ajuste = 0;
                 const kilos = parseFloat(c.kilos);
                 const puesto = parseFloat(c.puesto);
@@ -540,9 +554,44 @@
                     if(puesto <= 3) ajuste -= 0.2;
                     else if(puesto >= 8) ajuste += 0.3;
                 }
+
+                // 2. Ajuste por Efectividad (Jockey + Entrenador)
+                const jockeyPct = parseFloat(c.jockey_pct);
+                const trainerPct = parseFloat(c.trainer_pct);
+                let efecEquipo = 0;
+                let hasEfec = false;
+
+                if (!isNaN(jockeyPct) && !isNaN(trainerPct)) {
+                    efecEquipo = (jockeyPct + trainerPct) / 2;
+                    hasEfec = true;
+                } else if (!isNaN(jockeyPct)) {
+                    efecEquipo = jockeyPct;
+                    hasEfec = true;
+                } else if (!isNaN(trainerPct)) {
+                    efecEquipo = trainerPct;
+                    hasEfec = true;
+                }
+
+                if (hasEfec) {
+                    c.efec_equipo = efecEquipo.toFixed(1);
+                    // La base es 15%. Si es menor, penaliza. Si es mayor, bonifica.
+                    const ajusteEquipo = (15 - efecEquipo) * 0.02; 
+                    ajuste += ajusteEquipo;
+
+                    // Alertas de equipo
+                    if (efecEquipo >= 25) c.alerta = "EQUIPO CALIENTE";
+                    else if (efecEquipo < 10) c.alerta = "EQUIPO FRIO";
+                } else {
+                    c.efec_equipo = "-";
+                }
+
                 c.ajuste = ajuste.toFixed(2);
                 c.tpAjustado = c.tpReal !== "Sin Datos" ? (parseFloat(c.tpReal) + ajuste).toFixed(2) : "Sin Datos";
-                c.alerta = ""; 
+                
+                // Si no tiene alerta de equipo, se resetea (para las de VALOR/TRAMPA)
+                if (c.alerta !== "EQUIPO CALIENTE" && c.alerta !== "EQUIPO FRIO") {
+                    c.alerta = ""; 
+                }
             });
 
             const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
@@ -561,8 +610,11 @@
                     
                     const mlDecimal = parseOdds(c.ml);
                     if (!isNaN(mlDecimal)) {
-                        if (c.ranking === 1 && mlDecimal >= 4.0) c.alerta = "VALOR";
-                        else if (c.ranking >= 4 && mlDecimal <= 2.5) c.alerta = "TRAMPA";
+                        // Si no tiene alerta de equipo, revisamos si es VALOR o TRAMPA
+                        if (!c.alerta) {
+                            if (c.ranking === 1 && mlDecimal >= 4.0) c.alerta = "VALOR";
+                            else if (c.ranking >= 4 && mlDecimal <= 2.5) c.alerta = "TRAMPA";
+                        }
                     }
                 });
             });
@@ -573,7 +625,7 @@
             
             guardarSilencioso();
             renderTabla(); 
-            alert("¡Cálculos ejecutados! Revisa el Ticket arriba a la derecha.");
+            alert("¡Cálculos ejecutados con Éxito! El Factor Humano ha sido aplicado.");
         }
 
         function exportarDatos() {
@@ -601,8 +653,8 @@
 
         function exportarCSV() {
             if(caballos.length === 0) return alert("No hay datos.");
-            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jockey", "Entrenador", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
-            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey, c.trainer, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
+            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jockey %", "Entrenador %", "Efec. Equipo", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
+            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey_pct, c.trainer_pct, c.efec_equipo, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
