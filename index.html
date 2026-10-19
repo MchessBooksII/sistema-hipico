@@ -95,12 +95,14 @@
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
         td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; z-index: 6; position: relative;}
 
-        /* ANCHOS DE COLUMNAS */
-        th:nth-child(1) { width: 2%; } th:nth-child(2) { width: 6%; } th:nth-child(3) { width: 2%; } th:nth-child(4) { width: 2%; } th:nth-child(5) { width: 7%; }
-        th:nth-child(6) { width: 7%; } th:nth-child(7) { width: 7%; } th:nth-child(8) { width: 3%; }
+        /* ANCHOS DE COLUMNAS (Ajustados para incluir Tips) */
+        th:nth-child(1) { width: 2%; } th:nth-child(2) { width: 5%; } th:nth-child(3) { width: 2%; } th:nth-child(4) { width: 2%; } th:nth-child(5) { width: 6%; }
+        th:nth-child(6) { width: 6%; } th:nth-child(7) { width: 6%; } th:nth-child(8) { width: 3%; }
         th:nth-child(n+9):nth-child(-n+13) { width: 3%; } th:nth-child(n+14):nth-child(-n+18) { width: 2%; }
         th:nth-child(n+19):nth-child(-n+23) { width: 2%; } th:nth-child(n+24):nth-child(-n+29) { width: 2%; }
-        th:nth-child(30) { width: 7%; } th:nth-child(31) { width: 6%; }
+        th:nth-child(30) { width: 6%; } /* Alerta */
+        th:nth-child(31) { width: 7%; } /* Tips */
+        th:nth-child(32) { width: 5%; } /* Notas */
 
         .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 13px; }
         .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 12px; }
@@ -136,7 +138,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.5 - Interfaz Fluida</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.6 - Tips Integrados</div>
     </header>
 
     <div class="top-dashboard">
@@ -217,7 +219,7 @@
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Pto</th><th>Kg</th><th>Sty</th><th>Q</th><th>ML</th>
                     <th>TP</th><th>Aju</th><th>TP A</th><th>Rk</th><th>Dif</th><th>Est</th>
-                    <th>Alerta</th><th>Notas</th>
+                    <th>Alerta</th><th>Tips</th><th>Notas</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla"></tbody>
@@ -236,7 +238,6 @@
             </div>
 
             <div class="form-group">
-                <!-- AÑADIDO onchange PARA FILTRAR LA LISTA -->
                 <select id="tipoPersona" onchange="cargarStatsConfig()">
                     <option value="jockey">Jinete</option>
                     <option value="trainer">Entrenador</option>
@@ -266,6 +267,12 @@
     </div>
 
     <script>
+        // LISTA DE TIPS
+        const TIPS_LIST = [
+            "", "Hot Trainer", "Best Distance", "Horse for Course", "Top Pick", 
+            "Key Trainer", "Hot Jockey", "Exiting Key Race", "Combo", "Key Trainer (Alt)"
+        ];
+
         const DB_DEFAULT = {
             "La Rinconada": {
                 jockeys: { "Jaime Lugo": { win: 25, place: 50 }, "Roberth Capriles": { win: 18, place: 49 } },
@@ -411,7 +418,6 @@
             }
         }
 
-        // --- CORRECCIÓN AQUÍ: LA LISTA SE FILTRA SEGÚN EL TIPO SELECCIONADO ---
         function cargarStatsConfig() {
             const hipo = document.getElementById('configHipodromo').value;
             const tipo = document.getElementById('tipoPersona').value;
@@ -465,7 +471,6 @@
             if(caballo) { caballo[campo] = valor; guardarSilencioso(); }
         }
 
-        // --- CORRECCIÓN AQUÍ: YA NO RECALCULA TODA LA TABLA AL SELECCIONAR, PARA NO BLOQUEAR EL FOCO ---
         function seleccionarJockey(id, nombre) {
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
@@ -475,7 +480,6 @@
                     caballo.j_place = JOCKEYS_ACTUALES[nombre].place !== null ? JOCKEYS_ACTUALES[nombre].place : '';
                 } else { caballo.j_win = ''; caballo.j_place = ''; }
                 guardarSilencioso(); 
-                // Eliminado calcularTodo() de aquí
             }
         }
 
@@ -488,7 +492,6 @@
                     caballo.t_place = TRAINERS_ACTUALES[nombre].place !== null ? TRAINERS_ACTUALES[nombre].place : '';
                 } else { caballo.t_win = ''; caballo.t_place = ''; }
                 guardarSilencioso(); 
-                // Eliminado calcularTodo() de aquí
             }
         }
 
@@ -509,7 +512,7 @@
 
             caballos.push({
                 id: Date.now(), hipodromo: hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
-                scratched: false, nro: '', name: '', notes: '', jockey_name: '', trainer_name: '',
+                scratched: false, nro: '', name: '', notes: '', tip: '', jockey_name: '', trainer_name: '',
                 j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
                 t1: '', t2: '', t3: '', t4: '', t5: '', d1: '', d2: '', d3: '', d4: '', d5: '',
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
@@ -579,6 +582,12 @@
             let trainerOptions = '<option value="">--</option>';
             for (let name in TRAINERS_ACTUALES) trainerOptions += `<option value="${name}">${name}</option>`;
 
+            // Crear opciones de Tips
+            let tipOptions = '<option value="">--</option>';
+            TIPS_LIST.forEach(t => {
+                if(t !== "") tipOptions += `<option value="${t}">${t}</option>`;
+            });
+
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 if (animarUltimaFila && c.id === lastId) tr.classList.add('new-row');
@@ -593,6 +602,7 @@
 
                 let jSelect = jockeyOptions.replace(`value="${c.jockey_name}"`, `value="${c.jockey_name}" selected`);
                 let tSelect = trainerOptions.replace(`value="${c.trainer_name}"`, `value="${c.trainer_name}" selected`);
+                let tipSelect = tipOptions.replace(`value="${c.tip}"`, `value="${c.tip}" selected`);
 
                 tr.innerHTML = `
                     <td>
@@ -645,6 +655,7 @@
                           c.alerta === 'EQUIPO ELITE' ? '<span class="val-alerta alerta-elite">ÉLITE</span>' : 
                           c.alerta === 'EQUIPO FRIO' ? '<span class="val-alerta alerta-equipo-frio">FRÍO</span>' : ''}
                     </td>
+                    <td><select data-id="${c.id}" data-field="tip" onchange="actualizarDato(${c.id}, 'tip', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px; font-weight: bold; color: var(--warning);">${tipSelect}</select></td>
                     <td><input type="text" data-id="${c.id}" data-field="notes" value="${c.notes || ''}" placeholder="..." onchange="actualizarDato(${c.id}, 'notes', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:2px;" ${c.scratched ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
@@ -868,8 +879,8 @@
 
         function exportarCSV() {
             if(caballos.length === 0) return alert("No hay datos.");
-            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jinete", "J. Win%", "J. 1-2-3%", "Entrenador", "E. Win%", "E. 1-2-3%", "Indice Eq.", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
-            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey_name, c.j_win, c.j_place, c.trainer_name, c.t_win, c.t_place, c.efec_equipo, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
+            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jinete", "J. Win%", "J. 1-2-3%", "Entrenador", "E. Win%", "E. 1-2-3%", "Indice Eq.", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Tip", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
+            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey_name, c.j_win, c.j_place, c.trainer_name, c.t_win, c.t_place, c.efec_equipo, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.tip, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
