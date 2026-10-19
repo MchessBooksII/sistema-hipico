@@ -16,27 +16,28 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-size: 14px;
+            background-color: var(--bg-color); color: var(--text-main); padding: 10px; font-size: 12px;
+            width: 100vw; overflow-x: hidden; /* Evitar scroll horizontal global */
         }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .top-dashboard { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .top-dashboard { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         
         .podium-panel {
             flex: 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border); border-radius: 10px; padding: 15px 20px;
+            border: 1px solid var(--border); border-radius: 8px; padding: 10px 15px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); display: none; flex-direction: column; justify-content: center;
         }
-        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .podium-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 100px;}
-        .podium-horse { font-size: 16px; font-weight: 700; flex: 1; }
+        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px;}
+        .podium-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 90px;}
+        .podium-horse { font-size: 13px; font-weight: 700; flex: 1; }
         .pos-1 { color: var(--success); }
         .pos-2 { color: var(--warning); }
         .pos-3 { color: #f97316; }
         
-        .bar-container { flex: 2; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-left: 15px;}
+        .bar-container { flex: 2; height: 6px; background: #334155; border-radius: 3px; overflow: hidden; margin-left: 10px;}
         .bar-fill { height: 100%; transition: width 0.5s; }
         .bar-1 { background: var(--success); width: 100%; }
         .bar-2 { background: var(--warning); }
@@ -44,83 +45,111 @@
 
         .ticket-panel {
             flex: 1; background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent);
-            border-radius: 10px; padding: 15px; display: none; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 250px;
+            border-radius: 8px; padding: 10px; display: none; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 200px;
         }
-        .ticket-panel h3 { color: #60a5fa; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 5px; }
-        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+        .ticket-panel h3 { color: #60a5fa; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 3px; }
+        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
         .ticket-line span:last-child { font-weight: bold; color: var(--gold); }
-        .btn-copy { background: var(--accent); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-top: 10px; width: 100%; transition: 0.2s; }
+        .btn-copy { background: var(--accent); color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 5px; width: 100%; transition: 0.2s; }
         .btn-copy:hover { background: var(--accent-hover); }
         
         .pace-alert {
             background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5;
-            padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 13px;
-            display: none; align-items: center; gap: 10px; margin-bottom: 15px;
+            padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 11px;
+            display: none; align-items: center; gap: 10px; margin-bottom: 10px;
         }
 
-        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .group-inputs { display: flex; gap: 10px; flex: 1; }
+        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .group-inputs { display: flex; gap: 8px; flex: 1; }
 
-        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 13px; outline: none; transition: border-color 0.2s; width: 100%; }
-        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
+        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 6px 8px; border-radius: 4px; font-size: 11px; outline: none; transition: border-color 0.2s; width: 100%; }
+        input:focus, select:focus { border-color: var(--accent); }
 
-        button { padding: 10px 16px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 13px; }
-        .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        button { padding: 6px 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; font-size: 11px; }
+        .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); }
+        .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); }
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
         .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
-        .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; transform: translateY(-1px); }
+        .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); }
+        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
         
-        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 16px; padding: 5px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
-        .btn-scratch:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
+        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 14px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
+        .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 65vh; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; white-space: nowrap; }
-        th { background-color: #1e293b; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; }
-        td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); transition: background-color 0.2s; height: 40px; }
+        /* CONTENEDOR DE LA TABLA ULTRA-COMPACTA */
+        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; width: 100%; }
+        
+        table { 
+            width: 100%; 
+            table-layout: fixed; /* Forzar a que todas las columnas quepan en la pantalla */
+            border-collapse: collapse; 
+        }
+        
+        th { 
+            background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
+            text-transform: uppercase; font-size: 9px; letter-spacing: 0px; 
+            padding: 6px 2px; text-align: center; border-bottom: 2px solid var(--border); 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        
+        td { 
+            padding: 0; text-align: center; border-bottom: 1px solid var(--border); 
+            height: 28px; overflow: hidden; 
+        }
+        
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
-        /* Sticky Columns */
-        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); width: 40px;}
-        th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(3), td:nth-child(3) { position: sticky; left: 120px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(4), td:nth-child(4) { position: sticky; left: 170px; z-index: 5; background-color: var(--panel-bg); }
-        th:nth-child(5), td:nth-child(5) { position: sticky; left: 220px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); }
-        
-        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3), tr:hover td:nth-child(4), tr:hover td:nth-child(5) { background-color: #26334d; }
-
-        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 10px 6px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 14px;}
+        td input, td select { 
+            background: transparent; border: 1px solid transparent; border-radius: 0; 
+            padding: 4px 2px; color: var(--text-main); width: 100%; height: 100%; 
+            text-align: center; font-family: inherit; font-size: 11px;
+        }
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
-        td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; box-shadow: inset 0 0 0 1px var(--accent); z-index: 6; position: relative;}
+        td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; z-index: 6; position: relative;}
 
-        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 16px; }
-        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 15px; }
+        /* ASIGNACIÓN DE ANCHOS PORCENTUALES EXACTOS */
+        th:nth-child(1) { width: 2%; } /* Borrar */
+        th:nth-child(2) { width: 6%; } /* Hipodromo */
+        th:nth-child(3) { width: 2%; } /* Carr */
+        th:nth-child(4) { width: 2%; } /* Nro */
+        th:nth-child(5) { width: 7%; } /* Ejemplar */
+        th:nth-child(6) { width: 7%; } /* Jinete */
+        th:nth-child(7) { width: 7%; } /* Entrenador */
+        th:nth-child(8) { width: 3%; } /* Indice Eq */
+        /* T1 a T5 (5 columnas) = 15% */
+        th:nth-child(n+9):nth-child(-n+13) { width: 3%; }
+        /* D1 a D5 (5 columnas) = 10% */
+        th:nth-child(n+14):nth-child(-n+18) { width: 2%; }
+        /* Puesto, Kilos, Style, Quir, ML (5 columnas) = 10% */
+        th:nth-child(n+19):nth-child(-n+23) { width: 2%; }
+        /* TP Real, Ajuste, TP Ajust, Rank, Dif, Est (6 columnas) = 12% */
+        th:nth-child(n+24):nth-child(-n+29) { width: 2%; }
+        th:nth-child(30) { width: 7%; } /* Alerta */
+        th:nth-child(31) { width: 6%; } /* Notas */
+
+        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 13px; }
+        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 12px; }
         .val-rankin-3 { color: #f97316; font-weight: bold; }
         
-        .val-alerta { display: inline-block; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; margin: 5px; }
-        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
+        .val-alerta { display: inline-block; padding: 2px 4px; border-radius: 8px; font-weight: 700; font-size: 9px; letter-spacing: 0px; }
+        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); }
         .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
         .alerta-equipo-frio { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #60a5fa; }
         .alerta-equipo-caliente { background-color: rgba(251, 191, 36, 0.2); color: var(--gold); border: 1px solid var(--gold); }
-        .alerta-elite { background-color: rgba(232, 121, 249, 0.2); color: var(--elite); border: 1px solid var(--elite); box-shadow: 0 0 8px rgba(232, 121, 249, 0.4); }
+        .alerta-elite { background-color: rgba(232, 121, 249, 0.2); color: var(--elite); border: 1px solid var(--elite); }
 
-        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 12px; }
-        .text-destacado { font-weight: 700; color: white; padding: 5px;}
+        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 10px; }
+        .text-destacado { font-weight: 700; color: white; padding: 2px; font-size: 11px;}
         .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
         
         .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
         .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
-        .row-scratched td span { text-decoration: line-through; color: #ef4444; }
-        
-        @keyframes highlight { from { background-color: rgba(59, 130, 246, 0.4); } to { background-color: transparent; } }
-        .new-row { animation: highlight 1s ease-out; }
 
         /* MODAL DE CONFIGURACIÓN */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 18px;}
         .form-group { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .form-group input, .form-group select { flex: 1; min-width: 120px; }
         .config-list { max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; margin-top: 10px; background: #0f172a; padding: 5px;}
@@ -133,7 +162,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v12.0 - Importador JSON</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.1 - Vista Compacta</div>
     </header>
 
     <div class="top-dashboard">
@@ -173,22 +202,20 @@
 
     <div class="panel">
         <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
-            <label style="color: var(--gold); font-weight: bold;">Hipódromo:</label>
-            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 180px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
-            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️ Stats</button>
-            
-            <!-- NUEVO BOTÓN DE IMPORTACIÓN -->
-            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Importar JSON</button>
+            <label style="color: var(--gold); font-weight: bold; font-size: 11px;">Hipódromo:</label>
+            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
+            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 6px 10px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 6px 10px;" title="Importar archivo JSON con stats">📥</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="importarStatsJSON(event)">
         </div>
         
-        <div class="group-inputs" style="flex: 2;">
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
-            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir Ejemplar</button>
+        <div class="group-inputs" style="flex: 2; justify-content: flex-end;">
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 80px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 100px;">
+            <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir</button>
         </div>
         
-        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 150px; background: #0f172a;">
+        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 130px; background: #0f172a;">
             <option value="TODOS">🌐 Ver Todos</option>
         </select>
     </div>
@@ -197,7 +224,7 @@
         <div style="display: flex; gap: 10px;">
             <button onclick="calcularTodo()" class="btn-success">🧮 Ejecutar Cálculos Mágicos</button>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 5px;">
             <button onclick="exportarCSV()" class="btn-outline">📊 Exportar</button>
             <button onclick="exportarDatos()" class="btn-outline">💾 Respaldo</button>
             <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
@@ -211,21 +238,18 @@
             <thead>
                 <tr>
                     <th>🚫</th>
-                    <th style="width: 80px;">Hipódromo</th>
-                    <th style="width: 50px;">Carr.</th>
-                    <th style="width: 50px;">Nro</th>
-                    <th style="width: 120px;">Ejemplar</th>
-                    <th style="color: #60a5fa; font-size: 10px;">Jinete</th>
-                    <th style="color: #10b981; font-size: 10px;">Entrenador</th>
-                    <th style="color: var(--gold); font-size: 10px;">Índice Eq.</th>
+                    <th>Hipód.</th>
+                    <th>Carr</th>
+                    <th>Nro</th>
+                    <th>Ejemplar</th>
+                    <th>Jinete</th>
+                    <th>Entren.</th>
+                    <th>Índice</th>
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
-                    <th>Puesto</th><th>Kilos</th>
-                    <th>Style</th><th>Quir.</th><th>M. Line</th>
-                    <th style="color: #60a5fa;">TP Real</th><th>Ajuste</th>
-                    <th style="color: #c084fc;">TP Ajust.</th>
-                    <th>Ranking</th><th>Dif</th><th>Est</th>
-                    <th style="color: var(--success);">Alerta</th>
+                    <th>Pto</th><th>Kg</th><th>Sty</th><th>Q</th><th>ML</th>
+                    <th>TP</th><th>Aju</th><th>TP A</th><th>Rk</th><th>Dif</th><th>Est</th>
+                    <th>Alerta</th>
                     <th>Notas</th>
                 </tr>
             </thead>
@@ -237,11 +261,11 @@
     <div class="modal-overlay" id="modalConfig">
         <div class="modal-content">
             <h2>⚙️ Actualizar Jinetes / Entrenadores</h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Si no tienes el dato de 1-2-3%, déjalo en blanco. El sistema usará solo el Win%.</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Si no tienes el dato de 1-2-3%, déjalo en blanco.</p>
             
             <div class="form-group">
                 <select id="configHipodromo" onchange="cargarStatsConfig()"></select>
-                <button onclick="crearHipodromo()" class="btn-primary" style="flex: 0.5;">Nuevo Hipódromo</button>
+                <button onclick="crearHipodromo()" class="btn-primary" style="flex: 0.5;">Nuevo</button>
             </div>
 
             <div class="form-group">
@@ -249,9 +273,9 @@
                     <option value="jockey">Jinete</option>
                     <option value="trainer">Entrenador</option>
                 </select>
-                <input type="text" id="nombrePersona" placeholder="Nombre exacto">
-                <input type="number" id="porcWin" placeholder="% Win" style="max-width: 90px;">
-                <input type="number" id="porcPlace" placeholder="% 1-2-3 (Opc.)" style="max-width: 100px;">
+                <input type="text" id="nombrePersona" placeholder="Nombre">
+                <input type="number" id="porcWin" placeholder="% Win" style="max-width: 80px;">
+                <input type="number" id="porcPlace" placeholder="% 1-2-3" style="max-width: 80px;">
                 <button onclick="guardarPersona()" class="btn-success">Guardar</button>
             </div>
 
@@ -288,22 +312,17 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
-        // --- LÓGICA DE IMPORTACIÓN JSON ---
         function importarStatsJSON(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    // Validar estructura básica
                     if (data.jockeys || data.trainers) {
                         const nombreHipo = prompt("¿A qué hipódromo pertenecen estas estadísticas?", "La Rinconada");
                         if (nombreHipo) {
                             if (!DB_HIPODROMOS[nombreHipo]) DB_HIPODROMOS[nombreHipo] = { jockeys: {}, trainers: {} };
-                            
-                            // Si el JSON viene estructurado como { "jockeys": {...}, "trainers": {...} }
                             if (data.jockeys) Object.assign(DB_HIPODROMOS[nombreHipo].jockeys, data.jockeys);
                             if (data.trainers) Object.assign(DB_HIPODROMOS[nombreHipo].trainers, data.trainers);
                             
@@ -313,22 +332,17 @@
                             cambiarHipodromo();
                             alert(`¡Estadísticas cargadas exitosamente para ${nombreHipo}!`);
                         }
-                    } else {
-                        alert("El archivo JSON no tiene el formato correcto. Debe contener 'jockeys' y/o 'trainers'.");
-                    }
-                } catch (error) {
-                    alert("Error al leer el archivo JSON. Verifica que sea un archivo válido.");
-                }
+                    } else { alert("El archivo JSON no tiene el formato correcto."); }
+                } catch (error) { alert("Error al leer el archivo JSON."); }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Limpiar input
+            event.target.value = ''; 
         }
 
         function initHipodromos() {
             const selectActivo = document.getElementById('hipodromoActivo');
             const selectConfig = document.getElementById('configHipodromo');
             selectActivo.innerHTML = ''; selectConfig.innerHTML = '';
-            
             for (let hipo in DB_HIPODROMOS) {
                 selectActivo.innerHTML += `<option value="${hipo}">${hipo}</option>`;
                 selectConfig.innerHTML += `<option value="${hipo}">${hipo}</option>`;
@@ -341,13 +355,10 @@
             if (DB_HIPODROMOS[hipo]) {
                 JOCKEYS_ACTUALES = DB_HIPODROMOS[hipo].jockeys;
                 TRAINERS_ACTUALES = DB_HIPODROMOS[hipo].trainers;
-            } else {
-                JOCKEYS_ACTUALES = {}; TRAINERS_ACTUALES = {};
-            }
+            } else { JOCKEYS_ACTUALES = {}; TRAINERS_ACTUALES = {}; }
             renderTabla(); 
         }
 
-        // --- LÓGICA DEL MODAL ---
         function abrirModalConfig() {
             document.getElementById('modalConfig').style.display = 'flex';
             document.getElementById('configHipodromo').value = document.getElementById('hipodromoActivo').value;
@@ -378,26 +389,14 @@
             const winVal = document.getElementById('porcWin').value;
             const placeVal = document.getElementById('porcPlace').value;
 
-            if (!nombre || winVal === '') {
-                alert("El Nombre y el % Win son obligatorios.");
-                return;
-            }
-
+            if (!nombre || winVal === '') { alert("El Nombre y el % Win son obligatorios."); return; }
             const win = parseFloat(winVal);
             const place = placeVal !== '' ? parseFloat(placeVal) : null;
-
-            if (isNaN(win) || (place !== null && isNaN(place))) {
-                alert("Los porcentajes deben ser números válidos.");
-                return;
-            }
+            if (isNaN(win) || (place !== null && isNaN(place))) { alert("Los porcentajes deben ser números."); return; }
 
             if (!DB_HIPODROMOS[hipo]) DB_HIPODROMOS[hipo] = { jockeys: {}, trainers: {} };
-            
-            if (tipo === 'jockey') {
-                DB_HIPODROMOS[hipo].jockeys[nombre] = { win: win, place: place };
-            } else {
-                DB_HIPODROMOS[hipo].trainers[nombre] = { win: win, place: place };
-            }
+            if (tipo === 'jockey') DB_HIPODROMOS[hipo].jockeys[nombre] = { win: win, place: place };
+            else DB_HIPODROMOS[hipo].trainers[nombre] = { win: win, place: place };
 
             guardarDB();
             document.getElementById('nombrePersona').value = '';
@@ -419,7 +418,6 @@
             const hipo = document.getElementById('configHipodromo').value;
             const lista = document.getElementById('listaStats');
             lista.innerHTML = '';
-
             if (!DB_HIPODROMOS[hipo]) return;
 
             const jockeys = DB_HIPODROMOS[hipo].jockeys;
@@ -427,15 +425,14 @@
 
             for (let j in jockeys) {
                 const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D';
-                lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> (Jockey) - Win: ${jockeys[j].win}% | 1-2-3: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> - W: ${jockeys[j].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
             }
             for (let t in trainers) {
                 const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D';
-                lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> (Entrenador) - Win: ${trainers[t].win}% | 1-2-3: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> - W: ${trainers[t].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
             }
         }
 
-        // --- LÓGICA DEL SISTEMA ---
         function parseTiempo(valor) {
             if (!valor) return NaN;
             valor = valor.toString().trim();
@@ -474,9 +471,7 @@
                 if (JOCKEYS_ACTUALES[nombre]) {
                     caballo.j_win = JOCKEYS_ACTUALES[nombre].win;
                     caballo.j_place = JOCKEYS_ACTUALES[nombre].place !== null ? JOCKEYS_ACTUALES[nombre].place : '';
-                } else {
-                    caballo.j_win = ''; caballo.j_place = '';
-                }
+                } else { caballo.j_win = ''; caballo.j_place = ''; }
                 guardarSilencioso(); calcularTodo(); 
             }
         }
@@ -488,9 +483,7 @@
                 if (TRAINERS_ACTUALES[nombre]) {
                     caballo.t_win = TRAINERS_ACTUALES[nombre].win;
                     caballo.t_place = TRAINERS_ACTUALES[nombre].place !== null ? TRAINERS_ACTUALES[nombre].place : '';
-                } else {
-                    caballo.t_win = ''; caballo.t_place = '';
-                }
+                } else { caballo.t_win = ''; caballo.t_place = ''; }
                 guardarSilencioso(); calcularTodo(); 
             }
         }
@@ -504,7 +497,6 @@
             const hipodromo = document.getElementById('hipodromoActivo').value;
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
-            
             if(!carrera || !distancia) { alert("Llena Carrera y Distancia."); return; }
 
             caballos.push({
@@ -515,7 +507,6 @@
                 puesto: '', kilos: '', style: '', quirin: '', ml: '',
                 tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
-            
             guardarSilencioso(); renderTabla(true); 
 
             if (focusAuto) {
@@ -533,7 +524,6 @@
             const select = document.getElementById('filtroHipodromo');
             const valorActual = select.value;
             const hipodromos = [...new Set(caballos.map(c => c.hipodromo))];
-            
             select.innerHTML = '<option value="TODOS">🌐 Ver Todos</option>';
             hipodromos.forEach(h => select.innerHTML += `<option value="${h}">${h}</option>`);
             if (hipodromos.includes(valorActual) || valorActual === "TODOS") select.value = valorActual;
@@ -575,10 +565,10 @@
             const caballosFiltrados = filtro === "TODOS" ? caballos : caballos.filter(c => c.hipodromo === filtro);
             const lastId = caballos.length > 0 ? caballos[caballos.length-1].id : null;
 
-            let jockeyOptions = '<option value="">-- Jockey --</option>';
+            let jockeyOptions = '<option value="">--</option>';
             for (let name in JOCKEYS_ACTUALES) jockeyOptions += `<option value="${name}">${name}</option>`;
             
-            let trainerOptions = '<option value="">-- Entrenador --</option>';
+            let trainerOptions = '<option value="">--</option>';
             for (let name in TRAINERS_ACTUALES) trainerOptions += `<option value="${name}">${name}</option>`;
 
             caballosFiltrados.forEach(c => {
@@ -602,25 +592,27 @@
                             ${c.scratched ? '♻️' : '🚫'}
                         </button>
                     </td>
-                    <td><span style="font-weight: 600; color: #94a3b8;">${c.hipodromo}</span></td>
-                    <td>${c.carrera}</td>
+                    <td><span style="font-weight: 600; color: #94a3b8; font-size: 9px;">${c.hipodromo}</span></td>
+                    <td style="font-size: 10px;">${c.carrera}</td>
                     <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:4px;" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td><select data-id="${c.id}" data-field="jockey_name" onchange="seleccionarJockey(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">${jSelect}</select></td>
-                    <td><select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:5px;">${tSelect}</select></td>
-                    <td><span style="font-weight: bold; color: ${efecColor}; padding: 5px;">${c.efec_equipo || '-'}</span></td>
+                    <td><select data-id="${c.id}" data-field="jockey_name" onchange="seleccionarJockey(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px;">${jSelect}</select></td>
+                    <td><select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px;">${tSelect}</select></td>
+                    <td><span style="font-weight: bold; color: ${efecColor}; font-size: 10px;">${c.efec_equipo || '-'}</span></td>
                     
                     <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    
                     <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    
                     <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}>
@@ -629,7 +621,7 @@
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
                     <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="Ej: 8/5" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="ML" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
                     <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
@@ -640,12 +632,12 @@
                     <td style="font-weight: 600;">${c.est}</td>
                     
                     <td>
-                        ${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">🔥 VALOR</span>' : 
-                          c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>' : 
-                          c.alerta === 'EQUIPO ELITE' ? '<span class="val-alerta alerta-elite">🌟 EQUIPO ÉLITE</span>' : 
-                          c.alerta === 'EQUIPO FRIO' ? '<span class="val-alerta alerta-equipo-frio">🧊 EQUIPO FRÍO</span>' : ''}
+                        ${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">VALOR</span>' : 
+                          c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">TRAMPA</span>' : 
+                          c.alerta === 'EQUIPO ELITE' ? '<span class="val-alerta alerta-elite">ÉLITE</span>' : 
+                          c.alerta === 'EQUIPO FRIO' ? '<span class="val-alerta alerta-equipo-frio">FRÍO</span>' : ''}
                     </td>
-                    <td><input type="text" data-id="${c.id}" data-field="notes" value="${c.notes || ''}" placeholder="Nota..." onchange="actualizarDato(${c.id}, 'notes', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:10px;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="notes" value="${c.notes || ''}" placeholder="..." onchange="actualizarDato(${c.id}, 'notes', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:2px;" ${c.scratched ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -680,7 +672,7 @@
             
             const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
 
-            const getHorseName = (h) => h ? `<span style="font-size:20px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:12px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
+            const getHorseName = (h) => h ? `<span style="font-size:16px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:10px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
 
             document.getElementById('podio1').innerHTML = getHorseName(p1);
             document.getElementById('podio2').innerHTML = getHorseName(p2);
@@ -713,11 +705,11 @@
             if (earlyHorses.length >= 3) {
                 paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
                 paceAlert.style.borderColor = 'var(--danger)'; paceAlert.style.color = '#fca5a5';
-                document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida. Se van a quemar peleando la punta. Favorece a los ejemplares con estilo "S".`;
+                document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida. Se van a quemar peleando la punta.`;
             } else if (earlyHorses.length === 1 && topCarrera.length > 3) {
                 paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
                 paceAlert.style.borderColor = 'var(--success)'; paceAlert.style.color = '#6ee7b7';
-                document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse y "robarse" la carrera.`;
+                document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida. Podría escaparse.`;
             } else { paceAlert.style.display = 'none'; }
         }
 
@@ -741,7 +733,7 @@
 
             caballos.forEach(c => {
                 if (c.scratched) {
-                    c.tpReal = "Retirado"; c.ajuste = "-"; c.tpAjustado = "Retirado";
+                    c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret.";
                     c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-";
                     return;
                 }
@@ -754,7 +746,7 @@
                     if(distancias[i] === c.distanciaHoy && !isNaN(tiempos[i])) tiemposValidos.push(tiempos[i]);
                 }
 
-                c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "Sin Datos";
+                c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "S/D";
 
                 let ajuste = 0;
                 const kilos = parseFloat(c.kilos);
@@ -788,10 +780,10 @@
                         c.efec_equipo = indiceVisual.toFixed(1);
                         ajuste += ((15 - avgWin) * 0.02) + ((40 - avgPlace) * 0.01);
                     } else if (hasWin) {
-                        c.efec_equipo = avgWin.toFixed(1) + " (W)";
+                        c.efec_equipo = avgWin.toFixed(1) + "W";
                         ajuste += ((15 - avgWin) * 0.02);
                     } else if (hasPlace) {
-                        c.efec_equipo = avgPlace.toFixed(1) + " (P)";
+                        c.efec_equipo = avgPlace.toFixed(1) + "P";
                         ajuste += ((40 - avgPlace) * 0.01);
                     }
 
@@ -806,22 +798,17 @@
                         else if (avgPlace < 30) c.alerta = "EQUIPO FRIO";
                     }
 
-                } else {
-                    c.efec_equipo = "-";
-                }
+                } else { c.efec_equipo = "-"; }
 
                 c.ajuste = ajuste.toFixed(2);
-                c.tpAjustado = c.tpReal !== "Sin Datos" ? (parseFloat(c.tpReal) + ajuste).toFixed(2) : "Sin Datos";
-                
-                if (c.alerta !== "EQUIPO ELITE" && c.alerta !== "EQUIPO FRIO") {
-                    c.alerta = ""; 
-                }
+                c.tpAjustado = c.tpReal !== "S/D" ? (parseFloat(c.tpReal) + ajuste).toFixed(2) : "S/D";
+                if (c.alerta !== "EQUIPO ELITE" && c.alerta !== "EQUIPO FRIO") c.alerta = ""; 
             });
 
             const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
             
             carrerasUnicas.forEach(clave => {
-                let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "Sin Datos" && !c.scratched);
+                let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "S/D" && !c.scratched);
                 if(lista.length === 0) return;
 
                 lista.sort((a,b) => parseFloat(a.tpAjustado) - parseFloat(b.tpAjustado));
@@ -843,7 +830,7 @@
             });
 
             caballos.forEach(c => {
-                if(c.tpAjustado === "Sin Datos" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
+                if(c.tpAjustado === "S/D" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; }
             });
             
             guardarSilencioso(); renderTabla(); 
