@@ -120,22 +120,23 @@
         .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
         .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
 
+        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 18px;}
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 16px;}
         .form-group { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .form-group input, .form-group select { flex: 1; min-width: 120px; }
+        .form-group input, .form-group select { flex: 1; min-width: 120px; font-size: 13px; padding: 10px;}
         .config-list { max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; margin-top: 10px; background: #0f172a; padding: 5px;}
         .config-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid var(--border); font-size: 13px;}
         .config-item:last-child { border-bottom: none; }
-        .btn-close { background: var(--danger); color: white; margin-top: 20px; width: 100%; justify-content: center; }
+        .btn-close { background: var(--danger); color: white; margin-top: 10px; width: 100%; justify-content: center; padding: 10px;}
     </style>
 </head>
 <body>
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.3 - Importador Seguro</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.4 - Importador Inteligente</div>
     </header>
 
     <div class="top-dashboard">
@@ -179,7 +180,7 @@
             <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
             <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 6px 10px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
             <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 6px 10px;" title="Importar archivo JSON con stats">📥</button>
-            <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="importarStatsJSON(event)">
+            <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
         </div>
         
         <div class="group-inputs" style="flex: 2; justify-content: flex-end;">
@@ -223,6 +224,7 @@
         </table>
     </div>
 
+    <!-- MODAL DE CONFIGURACIÓN (JINETES/ENTRENADORES) -->
     <div class="modal-overlay" id="modalConfig">
         <div class="modal-content">
             <h2>⚙️ Actualizar Jinetes / Entrenadores</h2>
@@ -249,6 +251,19 @@
         </div>
     </div>
 
+    <!-- NUEVO MODAL: SELECCIONAR HIPÓDROMO AL IMPORTAR -->
+    <div class="modal-overlay" id="modalImportSelect">
+        <div class="modal-content">
+            <h2>📥 ¿A qué hipódromo pertenecen estas estadísticas?</h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Selecciona de la lista para evitar errores de tipeo.</p>
+            <div class="form-group">
+                <select id="selectImportHipodromo"></select>
+            </div>
+            <button onclick="confirmarImportacion()" class="btn-success" style="width: 100%; padding: 10px;">Confirmar Importación</button>
+            <button onclick="cerrarModalImport()" class="btn-close">Cancelar</button>
+        </div>
+    </div>
+
     <script>
         const DB_DEFAULT = {
             "La Rinconada": {
@@ -272,10 +287,12 @@
         
         let JOCKEYS_ACTUALES = {};
         let TRAINERS_ACTUALES = {};
+        let dataTemporalImport = null; // Variable para guardar el JSON temporalmente
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
-        function importarStatsJSON(event) {
+        // --- NUEVA LÓGICA DE IMPORTACIÓN CON DROPDOWN ---
+        function leerArchivoStats(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -283,36 +300,49 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.jockeys || data.trainers) {
-                        // CAMBIO CLAVE: El prompt sale vacío para evitar sobreescribir por error
-                        const nombreHipo = prompt("Escribe el nombre EXACTO del Hipódromo (ej. Finger Lakes):", "");
-                        
-                        if (nombreHipo && nombreHipo.trim() !== "") {
-                            const hipoLimpio = nombreHipo.trim();
-                            
-                            if (!DB_HIPODROMOS[hipoLimpio]) {
-                                DB_HIPODROMOS[hipoLimpio] = { jockeys: {}, trainers: {} };
-                            }
-                            
-                            // SOBREESCRIBIR en lugar de mezclar
-                            if (data.jockeys) DB_HIPODROMOS[hipoLimpio].jockeys = data.jockeys;
-                            if (data.trainers) DB_HIPODROMOS[hipoLimpio].trainers = data.trainers;
-                            
-                            guardarDB();
-                            initHipodromos();
-                            
-                            // Forzar la selección al nuevo hipódromo
-                            document.getElementById('hipodromoActivo').value = hipoLimpio;
-                            cambiarHipodromo();
-                            
-                            alert(`¡Estadísticas cargadas exitosamente para ${hipoLimpio}!`);
-                        }
+                        dataTemporalImport = data; // Guardamos temporalmente
+                        abrirModalImport(); // Abrimos el modal
                     } else { alert("El archivo JSON no tiene el formato correcto."); }
                 } catch (error) { alert("Error al leer el archivo JSON."); }
             };
             reader.readAsText(file);
-            event.target.value = ''; 
+            event.target.value = ''; // Limpiar input
         }
 
+        function abrirModalImport() {
+            const select = document.getElementById('selectImportHipodromo');
+            select.innerHTML = '';
+            for (let hipo in DB_HIPODROMOS) {
+                select.innerHTML += `<option value="${hipo}">${hipo}</option>`;
+            }
+            document.getElementById('modalImportSelect').style.display = 'flex';
+        }
+
+        function cerrarModalImport() {
+            document.getElementById('modalImportSelect').style.display = 'none';
+            dataTemporalImport = null;
+        }
+
+        function confirmarImportacion() {
+            const hipoLimpio = document.getElementById('selectImportHipodromo').value;
+            if (!dataTemporalImport || !hipoLimpio) return;
+
+            if (!DB_HIPODROMOS[hipoLimpio]) DB_HIPODROMOS[hipoLimpio] = { jockeys: {}, trainers: {} };
+            
+            // SOBREESCRIBIR DATOS
+            if (dataTemporalImport.jockeys) DB_HIPODROMOS[hipoLimpio].jockeys = dataTemporalImport.jockeys;
+            if (dataTemporalImport.trainers) DB_HIPODROMOS[hipoLimpio].trainers = dataTemporalImport.trainers;
+            
+            guardarDB();
+            initHipodromos();
+            document.getElementById('hipodromoActivo').value = hipoLimpio;
+            cambiarHipodromo();
+            
+            cerrarModalImport();
+            alert(`¡Estadísticas cargadas exitosamente para ${hipoLimpio}!`);
+        }
+
+        // --- LÓGICA GENERAL ---
         function initHipodromos() {
             const selectActivo = document.getElementById('hipodromoActivo');
             const selectConfig = document.getElementById('configHipodromo');
