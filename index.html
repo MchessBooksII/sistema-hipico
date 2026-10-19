@@ -17,7 +17,7 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background-color: var(--bg-color); color: var(--text-main); padding: 10px; font-size: 12px;
-            width: 100vw; overflow-x: hidden; /* Evitar scroll horizontal global */
+            width: 100vw; overflow-x: hidden;
         }
 
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
@@ -77,14 +77,9 @@
         .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 14px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        /* CONTENEDOR DE LA TABLA ULTRA-COMPACTA */
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; width: 100%; }
         
-        table { 
-            width: 100%; 
-            table-layout: fixed; /* Forzar a que todas las columnas quepan en la pantalla */
-            border-collapse: collapse; 
-        }
+        table { width: 100%; table-layout: fixed; border-collapse: collapse; }
         
         th { 
             background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
@@ -93,40 +88,19 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         
-        td { 
-            padding: 0; text-align: center; border-bottom: 1px solid var(--border); 
-            height: 28px; overflow: hidden; 
-        }
-        
+        td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); height: 28px; overflow: hidden; }
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
-        td input, td select { 
-            background: transparent; border: 1px solid transparent; border-radius: 0; 
-            padding: 4px 2px; color: var(--text-main); width: 100%; height: 100%; 
-            text-align: center; font-family: inherit; font-size: 11px;
-        }
+        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 4px 2px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 11px;}
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
         td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; z-index: 6; position: relative;}
 
-        /* ASIGNACIÓN DE ANCHOS PORCENTUALES EXACTOS */
-        th:nth-child(1) { width: 2%; } /* Borrar */
-        th:nth-child(2) { width: 6%; } /* Hipodromo */
-        th:nth-child(3) { width: 2%; } /* Carr */
-        th:nth-child(4) { width: 2%; } /* Nro */
-        th:nth-child(5) { width: 7%; } /* Ejemplar */
-        th:nth-child(6) { width: 7%; } /* Jinete */
-        th:nth-child(7) { width: 7%; } /* Entrenador */
-        th:nth-child(8) { width: 3%; } /* Indice Eq */
-        /* T1 a T5 (5 columnas) = 15% */
-        th:nth-child(n+9):nth-child(-n+13) { width: 3%; }
-        /* D1 a D5 (5 columnas) = 10% */
-        th:nth-child(n+14):nth-child(-n+18) { width: 2%; }
-        /* Puesto, Kilos, Style, Quir, ML (5 columnas) = 10% */
-        th:nth-child(n+19):nth-child(-n+23) { width: 2%; }
-        /* TP Real, Ajuste, TP Ajust, Rank, Dif, Est (6 columnas) = 12% */
-        th:nth-child(n+24):nth-child(-n+29) { width: 2%; }
-        th:nth-child(30) { width: 7%; } /* Alerta */
-        th:nth-child(31) { width: 6%; } /* Notas */
+        /* ANCHOS DE COLUMNAS */
+        th:nth-child(1) { width: 2%; } th:nth-child(2) { width: 6%; } th:nth-child(3) { width: 2%; } th:nth-child(4) { width: 2%; } th:nth-child(5) { width: 7%; }
+        th:nth-child(6) { width: 7%; } th:nth-child(7) { width: 7%; } th:nth-child(8) { width: 3%; }
+        th:nth-child(n+9):nth-child(-n+13) { width: 3%; } th:nth-child(n+14):nth-child(-n+18) { width: 2%; }
+        th:nth-child(n+19):nth-child(-n+23) { width: 2%; } th:nth-child(n+24):nth-child(-n+29) { width: 2%; }
+        th:nth-child(30) { width: 7%; } th:nth-child(31) { width: 6%; }
 
         .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 13px; }
         .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 12px; }
@@ -146,7 +120,6 @@
         .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
         .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
 
-        /* MODAL DE CONFIGURACIÓN */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 18px;}
@@ -162,7 +135,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.1 - Vista Compacta</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.2 - Multi-Hipódromo USA</div>
     </header>
 
     <div class="top-dashboard">
@@ -237,27 +210,19 @@
         <table>
             <thead>
                 <tr>
-                    <th>🚫</th>
-                    <th>Hipód.</th>
-                    <th>Carr</th>
-                    <th>Nro</th>
-                    <th>Ejemplar</th>
-                    <th>Jinete</th>
-                    <th>Entren.</th>
-                    <th>Índice</th>
+                    <th>🚫</th><th>Hipód.</th><th>Carr</th><th>Nro</th><th>Ejemplar</th>
+                    <th>Jinete</th><th>Entren.</th><th>Índice</th>
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Pto</th><th>Kg</th><th>Sty</th><th>Q</th><th>ML</th>
                     <th>TP</th><th>Aju</th><th>TP A</th><th>Rk</th><th>Dif</th><th>Est</th>
-                    <th>Alerta</th>
-                    <th>Notas</th>
+                    <th>Alerta</th><th>Notas</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla"></tbody>
         </table>
     </div>
 
-    <!-- MODAL DE CONFIGURACIÓN -->
     <div class="modal-overlay" id="modalConfig">
         <div class="modal-content">
             <h2>⚙️ Actualizar Jinetes / Entrenadores</h2>
@@ -285,23 +250,22 @@
     </div>
 
     <script>
+        // DB POR DEFECTO CON LOS NUEVOS HIPÓDROMOS AGREGADOS
         const DB_DEFAULT = {
             "La Rinconada": {
                 jockeys: {
-                    "Jaime Lugo": { win: 24, place: 49 }, "Jonathan Aray": { win: 17, place: 44 },
-                    "Roberth Capriles": { win: 17, place: 48 }, "Jaime Lugo C.": { win: 15, place: 39 },
-                    "Oliver Medina": { win: 14, place: 43 }, "Yoelbis González": { win: 13, place: 39 },
-                    "Francisco Quevedo": { win: 13, place: 41 }, "Johan E. Aranguren": { win: 16, place: 35 },
-                    "Winder Véliz": { win: 10, place: 46 }, "Félix Márquez": { win: 14, place: 33 }
+                    "Jaime Lugo": { win: 25, place: 50 }, "Roberth Capriles": { win: 18, place: 49 },
+                    "Jonathan Aray": { win: 17, place: 44 }, "Jaime Lugo C.": { win: 15, place: 39 },
+                    "Oliver Medina": { win: 14, place: 44 }, "Yoelbis González": { win: 13, place: 40 }
                 },
                 trainers: {
-                    "Riccardo D'Angelo": { win: 21, place: 46 }, "Fernando Parilli T.": { win: 15, place: 39 },
-                    "Gabriel Márquez": { win: 19, place: 46 }, "Carlos L. Uzcátegui": { win: 13, place: 34 },
-                    "Humberto Correa": { win: 19, place: 40 }, "Fernando Parilli": { win: 14, place: 47 },
-                    "Oscar González": { win: 13, place: 40 }, "Jorge Salvador": { win: 13, place: 36 },
-                    "Ismael Martínez": { win: 17, place: 44 }, "Henry Trujillo": { win: 7, place: 19 }
+                    "Riccardo D'Angelo": { win: 21, place: 46 }, "Fernando Parilli T.": { win: 16, place: 40 },
+                    "Gabriel Márquez": { win: 19, place: 49 }, "Carlos L. Uzcátegui": { win: 13, place: 35 }
                 }
-            }
+            },
+            "Finger Lakes": { jockeys: {}, trainers: {} },
+            "Parx Racing": { jockeys: {}, trainers: {} },
+            "Mountaineer": { jockeys: {}, trainers: {} }
         };
 
         let DB_HIPODROMOS = JSON.parse(localStorage.getItem('hipodromoDB')) || DB_DEFAULT;
@@ -320,7 +284,7 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.jockeys || data.trainers) {
-                        const nombreHipo = prompt("¿A qué hipódromo pertenecen estas estadísticas?", "La Rinconada");
+                        const nombreHipo = prompt("¿A qué hipódromo pertenecen estas estadísticas?", document.getElementById('hipodromoActivo').value);
                         if (nombreHipo) {
                             if (!DB_HIPODROMOS[nombreHipo]) DB_HIPODROMOS[nombreHipo] = { jockeys: {}, trainers: {} };
                             if (data.jockeys) Object.assign(DB_HIPODROMOS[nombreHipo].jockeys, data.jockeys);
@@ -497,7 +461,12 @@
             const hipodromo = document.getElementById('hipodromoActivo').value;
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
-            if(!carrera || !distancia) { alert("Llena Carrera y Distancia."); return; }
+            
+            // VALIDACIÓN CLAVE PARA QUE NO SE "BUGUEE"
+            if(!carrera || !distancia) { 
+                alert("⚠️ ATENCIÓN: Debes escribir el número de Carrera y la Distancia antes de darle a Añadir."); 
+                return; 
+            }
 
             caballos.push({
                 id: Date.now(), hipodromo: hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
@@ -623,9 +592,9 @@
                     <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="ML" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td class="${c.tpReal === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
+                    <td class="${c.tpReal === 'S/D' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
-                    <td class="${c.tpAjustado === 'Sin Datos' ? 'text-sindatos' : 'text-destacado'}" style="color: #c084fc;">${c.tpAjustado}</td>
+                    <td class="${c.tpAjustado === 'S/D' ? 'text-sindatos' : 'text-destacado'}" style="color: #c084fc;">${c.tpAjustado}</td>
                     
                     <td class="${c.ranking === 1 ? 'val-rankin-1' : c.ranking === 2 ? 'val-rankin-2' : c.ranking === 3 ? 'val-rankin-3' : ''}">${c.ranking}</td>
                     <td>${c.dif}</td>
