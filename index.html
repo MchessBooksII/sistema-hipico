@@ -16,28 +16,28 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-color); color: var(--text-main); padding: 10px; font-size: 12px;
+            background-color: var(--bg-color); color: var(--text-main); padding: 15px; font-size: 13px;
             width: 100vw; overflow-x: hidden;
         }
 
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-        h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .top-dashboard { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         
         .podium-panel {
             flex: 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border); border-radius: 8px; padding: 10px 15px;
+            border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); display: none; flex-direction: column; justify-content: center;
         }
-        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px;}
-        .podium-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 90px;}
-        .podium-horse { font-size: 13px; font-weight: 700; flex: 1; }
+        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 13px;}
+        .podium-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 100px;}
+        .podium-horse { font-size: 14px; font-weight: 700; flex: 1; }
         .pos-1 { color: var(--success); }
         .pos-2 { color: var(--warning); }
         .pos-3 { color: #f97316; }
         
-        .bar-container { flex: 2; height: 6px; background: #334155; border-radius: 3px; overflow: hidden; margin-left: 10px;}
+        .bar-container { flex: 2; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-left: 10px;}
         .bar-fill { height: 100%; transition: width 0.5s; }
         .bar-1 { background: var(--success); width: 100%; }
         .bar-2 { background: var(--warning); }
@@ -45,28 +45,28 @@
 
         .ticket-panel {
             flex: 1; background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent);
-            border-radius: 8px; padding: 10px; display: none; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 200px;
+            border-radius: 8px; padding: 12px; display: none; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 220px;
         }
-        .ticket-panel h3 { color: #60a5fa; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 3px; }
-        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+        .ticket-panel h3 { color: #60a5fa; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 3px; }
+        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; }
         .ticket-line span:last-child { font-weight: bold; color: var(--gold); }
-        .btn-copy { background: var(--accent); color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 5px; width: 100%; transition: 0.2s; }
+        .btn-copy { background: var(--accent); color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-top: 8px; width: 100%; transition: 0.2s; }
         .btn-copy:hover { background: var(--accent-hover); }
         
         .pace-alert {
             background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5;
-            padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 11px;
+            padding: 10px 15px; border-radius: 6px; font-weight: 600; font-size: 12px;
             display: none; align-items: center; gap: 10px; margin-bottom: 10px;
         }
 
-        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-        .group-inputs { display: flex; gap: 8px; flex: 1; }
+        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .group-inputs { display: flex; gap: 10px; flex: 1; }
 
-        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 6px 8px; border-radius: 4px; font-size: 11px; outline: none; transition: border-color 0.2s; width: 100%; }
+        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 8px 10px; border-radius: 4px; font-size: 12px; outline: none; transition: border-color 0.2s; width: 100%; }
         input:focus, select:focus { border-color: var(--accent); }
 
-        button { padding: 6px 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; font-size: 11px; }
+        button { padding: 8px 14px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 12px; }
         .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); }
         .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); }
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
@@ -74,49 +74,74 @@
         .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); }
         .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
         
-        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 14px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
+        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 16px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; width: 100%; }
+        /* TABLA CON SCROLL HORIZONTAL Y COLUMNAS FIJAS */
+        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
         
-        table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+        table { 
+            width: max-content; /* Permite que la tabla crezca */
+            min-width: 100%;
+            border-collapse: separate; 
+            border-spacing: 0; 
+        }
         
         th { 
             background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
-            text-transform: uppercase; font-size: 9px; letter-spacing: 0px; 
-            padding: 6px 2px; text-align: center; border-bottom: 2px solid var(--border); 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; 
+            padding: 10px 6px; text-align: center; border-bottom: 2px solid var(--border); 
+            white-space: nowrap; position: sticky; top: 0; z-index: 10;
+            min-width: 50px;
         }
         
-        td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); height: 28px; overflow: hidden; }
+        td { 
+            padding: 0; text-align: center; border-bottom: 1px solid var(--border); 
+            height: 32px; white-space: nowrap;
+        }
+        
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
-        td input, td select { background: transparent; border: 1px solid transparent; border-radius: 0; padding: 4px 2px; color: var(--text-main); width: 100%; height: 100%; text-align: center; font-family: inherit; font-size: 11px;}
+        /* Columnas Fijas (Sticky) para no perder el caballo */
+        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); width: 40px; min-width: 40px;}
+        th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background-color: var(--panel-bg); min-width: 80px;}
+        th:nth-child(3), td:nth-child(3) { position: sticky; left: 120px; z-index: 5; background-color: var(--panel-bg); min-width: 50px;}
+        th:nth-child(4), td:nth-child(4) { position: sticky; left: 170px; z-index: 5; background-color: var(--panel-bg); min-width: 50px;}
+        th:nth-child(5), td:nth-child(5) { position: sticky; left: 220px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); min-width: 130px;}
+        
+        tr:hover td:nth-child(1), tr:hover td:nth-child(2), tr:hover td:nth-child(3), tr:hover td:nth-child(4), tr:hover td:nth-child(5) { background-color: #26334d; }
+
+        td input, td select { 
+            background: transparent; border: 1px solid transparent; border-radius: 0; 
+            padding: 6px 4px; color: var(--text-main); width: 100%; height: 100%; 
+            text-align: center; font-family: inherit; font-size: 12px;
+        }
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
         td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; z-index: 6; position: relative;}
 
-        /* ANCHOS DE COLUMNAS (Ajustados para incluir Tips) */
-        th:nth-child(1) { width: 2%; } th:nth-child(2) { width: 5%; } th:nth-child(3) { width: 2%; } th:nth-child(4) { width: 2%; } th:nth-child(5) { width: 6%; }
-        th:nth-child(6) { width: 6%; } th:nth-child(7) { width: 6%; } th:nth-child(8) { width: 3%; }
-        th:nth-child(n+9):nth-child(-n+13) { width: 3%; } th:nth-child(n+14):nth-child(-n+18) { width: 2%; }
-        th:nth-child(n+19):nth-child(-n+23) { width: 2%; } th:nth-child(n+24):nth-child(-n+29) { width: 2%; }
-        th:nth-child(30) { width: 6%; } /* Alerta */
-        th:nth-child(31) { width: 7%; } /* Tips */
-        th:nth-child(32) { width: 5%; } /* Notas */
+        /* Anchos específicos para columnas de datos */
+        th:nth-child(n+6):nth-child(-n+8) { min-width: 90px; } /* Jinete, Entren, Indice */
+        th:nth-child(n+9):nth-child(-n+13) { min-width: 55px; } /* T1-T5 */
+        th:nth-child(n+14):nth-child(-n+18) { min-width: 60px; } /* D1-D5 */
+        th:nth-child(n+19):nth-child(-n+23) { min-width: 45px; } /* Pto-Kg-Sty-Q-ML */
+        th:nth-child(n+24):nth-child(-n+29) { min-width: 50px; } /* TP-Dif-Est */
+        th:nth-child(30) { min-width: 80px; } /* Alerta */
+        th:nth-child(31) { min-width: 120px; } /* Tips */
+        th:nth-child(32) { min-width: 100px; } /* Notas */
 
-        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 13px; }
-        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 12px; }
+        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 14px; }
+        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 13px; }
         .val-rankin-3 { color: #f97316; font-weight: bold; }
         
-        .val-alerta { display: inline-block; padding: 2px 4px; border-radius: 8px; font-weight: 700; font-size: 9px; letter-spacing: 0px; }
+        .val-alerta { display: inline-block; padding: 2px 6px; border-radius: 8px; font-weight: 700; font-size: 10px; letter-spacing: 0px; }
         .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); }
         .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
         .alerta-equipo-frio { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #60a5fa; }
         .alerta-equipo-caliente { background-color: rgba(251, 191, 36, 0.2); color: var(--gold); border: 1px solid var(--gold); }
         .alerta-elite { background-color: rgba(232, 121, 249, 0.2); color: var(--elite); border: 1px solid var(--elite); }
 
-        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 10px; }
-        .text-destacado { font-weight: 700; color: white; padding: 2px; font-size: 11px;}
+        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 11px; }
+        .text-destacado { font-weight: 700; color: white; padding: 2px; font-size: 12px;}
         .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
         
         .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
@@ -125,7 +150,7 @@
         /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 16px;}
+        .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 18px;}
         .form-group { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .form-group input, .form-group select { flex: 1; min-width: 120px; font-size: 13px; padding: 10px;}
         .config-list { max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; margin-top: 10px; background: #0f172a; padding: 5px;}
@@ -138,7 +163,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.6 - Tips Integrados</div>
+        <div style="color: var(--text-muted); font-size: 11px;">v13.0 - Diseño Expandido</div>
     </header>
 
     <div class="top-dashboard">
@@ -178,20 +203,20 @@
 
     <div class="panel">
         <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
-            <label style="color: var(--gold); font-weight: bold; font-size: 11px;">Hipódromo:</label>
+            <label style="color: var(--gold); font-weight: bold; font-size: 12px;">Hipódromo:</label>
             <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
-            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 6px 10px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
-            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 6px 10px;" title="Importar archivo JSON con stats">📥</button>
+            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
         </div>
         
         <div class="group-inputs" style="flex: 2; justify-content: flex-end;">
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 80px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 100px;">
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px;">
             <button onclick="agregarCaballo(true)" class="btn-primary" style="width: auto;">➕ Añadir</button>
         </div>
         
-        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 130px; background: #0f172a;">
+        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 150px; background: #0f172a;">
             <option value="TODOS">🌐 Ver Todos</option>
         </select>
     </div>
@@ -267,7 +292,6 @@
     </div>
 
     <script>
-        // LISTA DE TIPS
         const TIPS_LIST = [
             "", "Hot Trainer", "Best Distance", "Horse for Course", "Top Pick", 
             "Key Trainer", "Hot Jockey", "Exiting Key Race", "Combo", "Key Trainer (Alt)"
@@ -582,7 +606,6 @@
             let trainerOptions = '<option value="">--</option>';
             for (let name in TRAINERS_ACTUALES) trainerOptions += `<option value="${name}">${name}</option>`;
 
-            // Crear opciones de Tips
             let tipOptions = '<option value="">--</option>';
             TIPS_LIST.forEach(t => {
                 if(t !== "") tipOptions += `<option value="${t}">${t}</option>`;
@@ -610,35 +633,35 @@
                             ${c.scratched ? '♻️' : '🚫'}
                         </button>
                     </td>
-                    <td><span style="font-weight: 600; color: #94a3b8; font-size: 9px;">${c.hipodromo}</span></td>
-                    <td style="font-size: 10px;">${c.carrera}</td>
+                    <td><span style="font-weight: 600; color: #94a3b8; font-size: 11px;">${c.hipodromo}</span></td>
+                    <td style="font-size: 12px;">${c.carrera}</td>
                     <td><input type="number" class="input-nro" data-id="${c.id}" data-field="nro" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="name" value="${c.name || ''}" placeholder="Nombre" onchange="actualizarDato(${c.id}, 'name', this.value)" onkeydown="handleKeyDown(event)" style="text-align:left; padding-left:4px;" ${c.scratched ? 'disabled' : ''}></td>
                     
                     <td><select data-id="${c.id}" data-field="jockey_name" onchange="seleccionarJockey(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px;">${jSelect}</select></td>
                     <td><select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px;">${tSelect}</select></td>
-                    <td><span style="font-weight: bold; color: ${efecColor}; font-size: 10px;">${c.efec_equipo || '-'}</span></td>
+                    <td><span style="font-weight: bold; color: ${efecColor}; font-size: 11px;">${c.efec_equipo || '-'}</span></td>
                     
-                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" placeholder="T1" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" placeholder="T2" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" placeholder="T3" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" placeholder="T4" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" placeholder="T5" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" placeholder="D1" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" placeholder="D2" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" placeholder="D3" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" placeholder="D4" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" placeholder="D5" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" placeholder="Pto" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" placeholder="Kg" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}>
                         <option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option>
                         <option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option>
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
-                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" placeholder="Q" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="ML" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
                     <td class="${c.tpReal === 'S/D' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
@@ -691,7 +714,7 @@
             
             const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
 
-            const getHorseName = (h) => h ? `<span style="font-size:16px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:10px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
+            const getHorseName = (h) => h ? `<span style="font-size:18px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:11px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
 
             document.getElementById('podio1').innerHTML = getHorseName(p1);
             document.getElementById('podio2').innerHTML = getHorseName(p2);
