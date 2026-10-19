@@ -136,7 +136,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.4 - Importador Inteligente</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.5 - Interfaz Fluida</div>
     </header>
 
     <div class="top-dashboard">
@@ -236,7 +236,8 @@
             </div>
 
             <div class="form-group">
-                <select id="tipoPersona">
+                <!-- AÑADIDO onchange PARA FILTRAR LA LISTA -->
+                <select id="tipoPersona" onchange="cargarStatsConfig()">
                     <option value="jockey">Jinete</option>
                     <option value="trainer">Entrenador</option>
                 </select>
@@ -251,7 +252,7 @@
         </div>
     </div>
 
-    <!-- NUEVO MODAL: SELECCIONAR HIPÓDROMO AL IMPORTAR -->
+    <!-- MODAL: SELECCIONAR HIPÓDROMO AL IMPORTAR -->
     <div class="modal-overlay" id="modalImportSelect">
         <div class="modal-content">
             <h2>📥 ¿A qué hipódromo pertenecen estas estadísticas?</h2>
@@ -267,15 +268,8 @@
     <script>
         const DB_DEFAULT = {
             "La Rinconada": {
-                jockeys: {
-                    "Jaime Lugo": { win: 25, place: 50 }, "Roberth Capriles": { win: 18, place: 49 },
-                    "Jonathan Aray": { win: 17, place: 44 }, "Jaime Lugo C.": { win: 15, place: 39 },
-                    "Oliver Medina": { win: 14, place: 44 }, "Yoelbis González": { win: 13, place: 40 }
-                },
-                trainers: {
-                    "Riccardo D'Angelo": { win: 21, place: 46 }, "Fernando Parilli T.": { win: 16, place: 40 },
-                    "Gabriel Márquez": { win: 19, place: 49 }, "Carlos L. Uzcátegui": { win: 13, place: 35 }
-                }
+                jockeys: { "Jaime Lugo": { win: 25, place: 50 }, "Roberth Capriles": { win: 18, place: 49 } },
+                trainers: { "Riccardo D'Angelo": { win: 21, place: 46 }, "Fernando Parilli T.": { win: 16, place: 40 } }
             },
             "Finger Lakes": { jockeys: {}, trainers: {} },
             "Parx Racing": { jockeys: {}, trainers: {} },
@@ -287,11 +281,11 @@
         
         let JOCKEYS_ACTUALES = {};
         let TRAINERS_ACTUALES = {};
-        let dataTemporalImport = null; // Variable para guardar el JSON temporalmente
+        let dataTemporalImport = null;
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
-        // --- NUEVA LÓGICA DE IMPORTACIÓN CON DROPDOWN ---
+        // --- LÓGICA DE IMPORTACIÓN ---
         function leerArchivoStats(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -300,13 +294,13 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.jockeys || data.trainers) {
-                        dataTemporalImport = data; // Guardamos temporalmente
-                        abrirModalImport(); // Abrimos el modal
+                        dataTemporalImport = data; 
+                        abrirModalImport(); 
                     } else { alert("El archivo JSON no tiene el formato correcto."); }
                 } catch (error) { alert("Error al leer el archivo JSON."); }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Limpiar input
+            event.target.value = ''; 
         }
 
         function abrirModalImport() {
@@ -329,7 +323,6 @@
 
             if (!DB_HIPODROMOS[hipoLimpio]) DB_HIPODROMOS[hipoLimpio] = { jockeys: {}, trainers: {} };
             
-            // SOBREESCRIBIR DATOS
             if (dataTemporalImport.jockeys) DB_HIPODROMOS[hipoLimpio].jockeys = dataTemporalImport.jockeys;
             if (dataTemporalImport.trainers) DB_HIPODROMOS[hipoLimpio].trainers = dataTemporalImport.trainers;
             
@@ -418,22 +411,26 @@
             }
         }
 
+        // --- CORRECCIÓN AQUÍ: LA LISTA SE FILTRA SEGÚN EL TIPO SELECCIONADO ---
         function cargarStatsConfig() {
             const hipo = document.getElementById('configHipodromo').value;
+            const tipo = document.getElementById('tipoPersona').value;
             const lista = document.getElementById('listaStats');
             lista.innerHTML = '';
             if (!DB_HIPODROMOS[hipo]) return;
 
-            const jockeys = DB_HIPODROMOS[hipo].jockeys;
-            const trainers = DB_HIPODROMOS[hipo].trainers;
-
-            for (let j in jockeys) {
-                const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D';
-                lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> - W: ${jockeys[j].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
-            }
-            for (let t in trainers) {
-                const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D';
-                lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> - W: ${trainers[t].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+            if (tipo === 'jockey') {
+                const jockeys = DB_HIPODROMOS[hipo].jockeys;
+                for (let j in jockeys) {
+                    const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D';
+                    lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> - W: ${jockeys[j].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                }
+            } else {
+                const trainers = DB_HIPODROMOS[hipo].trainers;
+                for (let t in trainers) {
+                    const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D';
+                    lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> - W: ${trainers[t].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`;
+                }
             }
         }
 
@@ -468,6 +465,7 @@
             if(caballo) { caballo[campo] = valor; guardarSilencioso(); }
         }
 
+        // --- CORRECCIÓN AQUÍ: YA NO RECALCULA TODA LA TABLA AL SELECCIONAR, PARA NO BLOQUEAR EL FOCO ---
         function seleccionarJockey(id, nombre) {
             const caballo = caballos.find(c => c.id === id);
             if(caballo) {
@@ -476,7 +474,8 @@
                     caballo.j_win = JOCKEYS_ACTUALES[nombre].win;
                     caballo.j_place = JOCKEYS_ACTUALES[nombre].place !== null ? JOCKEYS_ACTUALES[nombre].place : '';
                 } else { caballo.j_win = ''; caballo.j_place = ''; }
-                guardarSilencioso(); calcularTodo(); 
+                guardarSilencioso(); 
+                // Eliminado calcularTodo() de aquí
             }
         }
 
@@ -488,7 +487,8 @@
                     caballo.t_win = TRAINERS_ACTUALES[nombre].win;
                     caballo.t_place = TRAINERS_ACTUALES[nombre].place !== null ? TRAINERS_ACTUALES[nombre].place : '';
                 } else { caballo.t_win = ''; caballo.t_place = ''; }
-                guardarSilencioso(); calcularTodo(); 
+                guardarSilencioso(); 
+                // Eliminado calcularTodo() de aquí
             }
         }
 
