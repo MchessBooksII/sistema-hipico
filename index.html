@@ -135,7 +135,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 10px;">v12.2 - Multi-Hipódromo USA</div>
+        <div style="color: var(--text-muted); font-size: 10px;">v12.3 - Importador Seguro</div>
     </header>
 
     <div class="top-dashboard">
@@ -250,7 +250,6 @@
     </div>
 
     <script>
-        // DB POR DEFECTO CON LOS NUEVOS HIPÓDROMOS AGREGADOS
         const DB_DEFAULT = {
             "La Rinconada": {
                 jockeys: {
@@ -284,17 +283,28 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.jockeys || data.trainers) {
-                        const nombreHipo = prompt("¿A qué hipódromo pertenecen estas estadísticas?", document.getElementById('hipodromoActivo').value);
-                        if (nombreHipo) {
-                            if (!DB_HIPODROMOS[nombreHipo]) DB_HIPODROMOS[nombreHipo] = { jockeys: {}, trainers: {} };
-                            if (data.jockeys) Object.assign(DB_HIPODROMOS[nombreHipo].jockeys, data.jockeys);
-                            if (data.trainers) Object.assign(DB_HIPODROMOS[nombreHipo].trainers, data.trainers);
+                        // CAMBIO CLAVE: El prompt sale vacío para evitar sobreescribir por error
+                        const nombreHipo = prompt("Escribe el nombre EXACTO del Hipódromo (ej. Finger Lakes):", "");
+                        
+                        if (nombreHipo && nombreHipo.trim() !== "") {
+                            const hipoLimpio = nombreHipo.trim();
+                            
+                            if (!DB_HIPODROMOS[hipoLimpio]) {
+                                DB_HIPODROMOS[hipoLimpio] = { jockeys: {}, trainers: {} };
+                            }
+                            
+                            // SOBREESCRIBIR en lugar de mezclar
+                            if (data.jockeys) DB_HIPODROMOS[hipoLimpio].jockeys = data.jockeys;
+                            if (data.trainers) DB_HIPODROMOS[hipoLimpio].trainers = data.trainers;
                             
                             guardarDB();
                             initHipodromos();
-                            document.getElementById('hipodromoActivo').value = nombreHipo;
+                            
+                            // Forzar la selección al nuevo hipódromo
+                            document.getElementById('hipodromoActivo').value = hipoLimpio;
                             cambiarHipodromo();
-                            alert(`¡Estadísticas cargadas exitosamente para ${nombreHipo}!`);
+                            
+                            alert(`¡Estadísticas cargadas exitosamente para ${hipoLimpio}!`);
                         }
                     } else { alert("El archivo JSON no tiene el formato correcto."); }
                 } catch (error) { alert("Error al leer el archivo JSON."); }
@@ -462,9 +472,8 @@
             const carrera = document.getElementById('carrera').value;
             const distancia = document.getElementById('distancia').value;
             
-            // VALIDACIÓN CLAVE PARA QUE NO SE "BUGUEE"
             if(!carrera || !distancia) { 
-                alert("⚠️ ATENCIÓN: Debes escribir el número de Carrera y la Distancia antes de darle a Añadir."); 
+                alert("⚠️ Debes escribir el número de Carrera y la Distancia."); 
                 return; 
             }
 
