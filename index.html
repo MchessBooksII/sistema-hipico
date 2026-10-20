@@ -147,7 +147,6 @@
         .config-item:last-child { border-bottom: none; }
         .btn-close { background: var(--danger); color: white; margin-top: 10px; width: 100%; justify-content: center; padding: 10px;}
         
-        textarea { width: 100%; height: 150px; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; resize: vertical; }
         .help-text { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; }
     </style>
 </head>
@@ -155,7 +154,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 11px;">v15.0 - Importador de Carrera JSON</div>
+        <div style="color: var(--text-muted); font-size: 11px;">v15.2 - Borrado Selectivo</div>
     </header>
 
     <div class="top-dashboard">
@@ -201,7 +200,6 @@
             <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Stats</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
             
-            <!-- NUEVO BOTÓN DE IMPORTAR CARRERA -->
             <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
         </div>
@@ -226,7 +224,11 @@
             <button onclick="exportarDatos()" class="btn-outline">💾 Respaldo</button>
             <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
             <button onclick="document.getElementById('importarArchivo').click()" class="btn-outline">📂 Restaurar</button>
-            <button onclick="limpiarTodo()" class="btn-danger">🗑️</button>
+            
+            <!-- BOTÓN DE BORRAR CARRERA ESPECÍFICA -->
+            <button onclick="borrarCarreraActual()" class="btn-danger" title="Borra solo la carrera seleccionada arriba">🗑️ Borrar Carrera</button>
+            
+            <button onclick="limpiarTodo()" class="btn-danger" style="background: rgba(239, 68, 68, 0.2);" title="Borra TODO el sistema">🧨 Borrar Todo</button>
         </div>
     </div>
 
@@ -312,6 +314,24 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
+        // --- FUNCIÓN PARA BORRAR SOLO UNA CARRERA ---
+        function borrarCarreraActual() {
+            const hipo = document.getElementById('hipodromoActivo').value;
+            const car = document.getElementById('carrera').value;
+            
+            if (!car) {
+                alert("⚠️ Escribe el número de la carrera que quieres borrar en el campo 'Carrera N°'.");
+                return;
+            }
+
+            if (confirm(`¿Estás seguro de que quieres borrar la Carrera ${car} del hipódromo ${hipo}?`)) {
+                // Filtramos los caballos para quedarnos con todos MENOS los de esta carrera/hipódromo
+                caballos = caballos.filter(c => !(c.hipodromo === hipo && c.carrera === parseInt(car)));
+                guardarSilencioso();
+                renderTabla();
+            }
+        }
+
         // --- LÓGICA DE IMPORTACIÓN DE CARRERA (JSON) ---
         function importarCarreraJSON(event) {
             const file = event.target.files[0];
@@ -336,7 +356,6 @@
 
                     let agregados = 0;
                     data.forEach(item => {
-                        // Mapeo del JSON a la estructura interna
                         caballos.push({
                             id: Date.now() + Math.random(), 
                             hipodromo: hipodromo, 
@@ -369,7 +388,7 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Limpiar input
+            event.target.value = ''; 
         }
 
         // --- LÓGICA DE IMPORTACIÓN DE STATS (JINETES/ENTRENADORES) ---
@@ -698,27 +717,27 @@
                     <td><select data-id="${c.id}" data-field="trainer_name" onchange="seleccionarTrainer(${c.id}, this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''} style="text-align:left; padding-left:2px;">${tSelect}</select></td>
                     <td><span style="font-weight: bold; color: ${efecColor}; font-size: 11px;">${c.efec_equipo || '-'}</span></td>
                     
-                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1}" placeholder="T1" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2}" placeholder="T2" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3}" placeholder="T3" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4}" placeholder="T4" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5}" placeholder="T5" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t1" value="${c.t1 || ''}" onchange="actualizarDato(${c.id}, 't1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t2" value="${c.t2 || ''}" onchange="actualizarDato(${c.id}, 't2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t3" value="${c.t3 || ''}" onchange="actualizarDato(${c.id}, 't3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t4" value="${c.t4 || ''}" onchange="actualizarDato(${c.id}, 't4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="t5" value="${c.t5 || ''}" onchange="actualizarDato(${c.id}, 't5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1}" placeholder="D1" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2}" placeholder="D2" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3}" placeholder="D3" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4}" placeholder="D4" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5}" placeholder="D5" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d1" value="${c.d1 || ''}" onchange="actualizarDato(${c.id}, 'd1', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d2" value="${c.d2 || ''}" onchange="actualizarDato(${c.id}, 'd2', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d3" value="${c.d3 || ''}" onchange="actualizarDato(${c.id}, 'd3', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d4" value="${c.d4 || ''}" onchange="actualizarDato(${c.id}, 'd4', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="d5" value="${c.d5 || ''}" onchange="actualizarDato(${c.id}, 'd5', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto}" placeholder="Pto" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos}" placeholder="Kg" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="puesto" value="${c.puesto || ''}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="kilos" value="${c.kilos || ''}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><select data-id="${c.id}" data-field="style" onchange="actualizarDato(${c.id}, 'style', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}>
                         <option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option>
                         <option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option>
                         <option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option>
                     </select></td>
-                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin}" placeholder="Q" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml}" placeholder="ML" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" data-id="${c.id}" data-field="quirin" value="${c.quirin || ''}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" onkeydown="handleKeyDown(event)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" data-id="${c.id}" data-field="ml" value="${c.ml || ''}" onchange="actualizarDato(${c.id}, 'ml', this.value)" onkeydown="handleKeyDown(event)" ${c.scratched ? 'disabled' : ''}></td>
                     
                     <td class="${c.tpReal === 'S/D' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
@@ -953,7 +972,7 @@
         }
 
         function limpiarTodo() {
-            if(confirm("¿Borrar todos los datos actuales de caballos?")) { caballos = []; guardarSilencioso(); renderTabla(); }
+            if(confirm("¿Borrar TODOS los datos de TODOS los hipódromos? Esta acción no se puede deshacer.")) { caballos = []; guardarSilencioso(); renderTabla(); }
         }
 
         function exportarCSV() {
