@@ -73,36 +73,26 @@
         .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
         .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); }
         .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
+        .btn-info { background: #0ea5e9; color: white; } .btn-info:hover { background: #0284c7; }
         
         .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 16px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        /* TABLA CON SCROLL HORIZONTAL Y COLUMNAS FIJAS */
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
         
-        table { 
-            width: max-content; /* Permite que la tabla crezca */
-            min-width: 100%;
-            border-collapse: separate; 
-            border-spacing: 0; 
-        }
+        table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; }
         
         th { 
             background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
             text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; 
             padding: 10px 6px; text-align: center; border-bottom: 2px solid var(--border); 
-            white-space: nowrap; position: sticky; top: 0; z-index: 10;
-            min-width: 50px;
+            white-space: nowrap; position: sticky; top: 0; z-index: 10; min-width: 50px;
         }
         
-        td { 
-            padding: 0; text-align: center; border-bottom: 1px solid var(--border); 
-            height: 32px; white-space: nowrap;
-        }
-        
+        td { padding: 0; text-align: center; border-bottom: 1px solid var(--border); height: 32px; white-space: nowrap; }
         tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
 
-        /* Columnas Fijas (Sticky) para no perder el caballo */
+        /* Columnas Fijas (Sticky) */
         th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); width: 40px; min-width: 40px;}
         th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background-color: var(--panel-bg); min-width: 80px;}
         th:nth-child(3), td:nth-child(3) { position: sticky; left: 120px; z-index: 5; background-color: var(--panel-bg); min-width: 50px;}
@@ -119,15 +109,14 @@
         td input:hover, td select:hover { border-color: var(--border); background: #0f172a; }
         td input:focus, td select:focus { border-color: var(--accent); background: #0f172a; z-index: 6; position: relative;}
 
-        /* Anchos específicos para columnas de datos */
-        th:nth-child(n+6):nth-child(-n+8) { min-width: 90px; } /* Jinete, Entren, Indice */
-        th:nth-child(n+9):nth-child(-n+13) { min-width: 55px; } /* T1-T5 */
-        th:nth-child(n+14):nth-child(-n+18) { min-width: 60px; } /* D1-D5 */
-        th:nth-child(n+19):nth-child(-n+23) { min-width: 45px; } /* Pto-Kg-Sty-Q-ML */
-        th:nth-child(n+24):nth-child(-n+29) { min-width: 50px; } /* TP-Dif-Est */
-        th:nth-child(30) { min-width: 80px; } /* Alerta */
-        th:nth-child(31) { min-width: 120px; } /* Tips */
-        th:nth-child(32) { min-width: 100px; } /* Notas */
+        th:nth-child(n+6):nth-child(-n+8) { min-width: 90px; }
+        th:nth-child(n+9):nth-child(-n+13) { min-width: 55px; }
+        th:nth-child(n+14):nth-child(-n+18) { min-width: 60px; }
+        th:nth-child(n+19):nth-child(-n+23) { min-width: 45px; }
+        th:nth-child(n+24):nth-child(-n+29) { min-width: 50px; }
+        th:nth-child(30) { min-width: 80px; }
+        th:nth-child(31) { min-width: 120px; }
+        th:nth-child(32) { min-width: 100px; }
 
         .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 14px; }
         .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 13px; }
@@ -149,7 +138,7 @@
 
         /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { color: #60a5fa; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 18px;}
         .form-group { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .form-group input, .form-group select { flex: 1; min-width: 120px; font-size: 13px; padding: 10px;}
@@ -157,13 +146,16 @@
         .config-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid var(--border); font-size: 13px;}
         .config-item:last-child { border-bottom: none; }
         .btn-close { background: var(--danger); color: white; margin-top: 10px; width: 100%; justify-content: center; padding: 10px;}
+        
+        textarea { width: 100%; height: 150px; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; resize: vertical; }
+        .help-text { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 11px;">v13.0 - Diseño Expandido</div>
+        <div style="color: var(--text-muted); font-size: 11px;">v15.0 - Importador de Carrera JSON</div>
     </header>
 
     <div class="top-dashboard">
@@ -206,8 +198,12 @@
             <label style="color: var(--gold); font-weight: bold; font-size: 12px;">Hipódromo:</label>
             <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
             <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
-            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥</button>
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Stats</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
+            
+            <!-- NUEVO BOTÓN DE IMPORTAR CARRERA -->
+            <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
+            <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
         </div>
         
         <div class="group-inputs" style="flex: 2; justify-content: flex-end;">
@@ -316,7 +312,67 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
-        // --- LÓGICA DE IMPORTACIÓN ---
+        // --- LÓGICA DE IMPORTACIÓN DE CARRERA (JSON) ---
+        function importarCarreraJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!Array.isArray(data)) {
+                        alert("El archivo JSON debe ser una lista (array) de caballos."); return;
+                    }
+
+                    const hipodromo = document.getElementById('hipodromoActivo').value;
+                    const carrera = document.getElementById('carrera').value;
+                    const distancia = document.getElementById('distancia').value;
+
+                    if (!carrera || !distancia) {
+                        alert("⚠️ Primero debes llenar el N° de Carrera y la Distancia en la barra superior.");
+                        return;
+                    }
+
+                    let agregados = 0;
+                    data.forEach(item => {
+                        // Mapeo del JSON a la estructura interna
+                        caballos.push({
+                            id: Date.now() + Math.random(), 
+                            hipodromo: hipodromo, 
+                            carrera: parseInt(carrera), 
+                            distanciaHoy: parseInt(distancia),
+                            scratched: false, 
+                            nro: item.nro || '', 
+                            name: item.nombre || '', 
+                            notes: '', tip: '', 
+                            jockey_name: item.jockey || '', 
+                            trainer_name: item.entrenador || '',
+                            j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
+                            t1: item.t1 || '', t2: item.t2 || '', t3: item.t3 || '', t4: item.t4 || '', t5: item.t5 || '', 
+                            d1: item.d1 || distancia, d2: item.d2 || '', d3: item.d3 || '', d4: item.d4 || '', d5: item.d5 || '',
+                            puesto: item.puesto || '', kilos: item.kilos || '', style: '', quirin: '', ml: item.ml || '',
+                            tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
+                        });
+                        agregados++;
+                    });
+
+                    if (agregados > 0) {
+                        guardarSilencioso();
+                        renderTabla();
+                        calcularTodo();
+                        alert(`¡Se han importado ${agregados} caballos exitosamente!`);
+                    }
+
+                } catch (error) {
+                    alert("Error al procesar el archivo JSON. Asegúrate de que sea un formato válido.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Limpiar input
+        }
+
+        // --- LÓGICA DE IMPORTACIÓN DE STATS (JINETES/ENTRENADORES) ---
         function leerArchivoStats(event) {
             const file = event.target.files[0];
             if (!file) return;
